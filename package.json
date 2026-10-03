@@ -1,0 +1,39 @@
+{
+  "name": "polobrokers",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3102",
+    "build": "next build",
+    "start": "next start -p 3002",
+    "lint": "next lint",
+    "check:copy": "node scripts/check-copy.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:responsive": "node scripts/check-responsive.mjs",
+    "assets:brand": "node scripts/generate-brand-assets.mjs",
+    "sheet": "node scripts/contact-sheet.mjs",
+    "verify": "node scripts/verify.mjs"
+  },
+  "dependencies": {
+    "next": "14.2.35",
+    "react": "^18",
+    "react-dom": "^18",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "playwright": "^1.63.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Prototype tokens (docs/prototype/TOKENS.md). */
+:root {
+  --green: #0b2e24;
+  --ivory: #f7f1e4;
+  --warm: #fffdf8;
+  --gold: #b08a52;
+  --ink: #12271f;
+  --rule: #d3bd98;
+  --panel-border: #c8a66d;
+  --kicker: #dac49f;
+  --bronze: #85653a;
+  --line: #cdbb98;
+  --footer-bg: #071d18;
+  --footer-text: #c6baa4;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ivory font-body text-ink antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1,
+  h2 {
+    @apply font-display font-medium;
+    line-height: 1;
+    /* Prototype clamp(2.8rem, 5vw, 5.2rem), capped at 11vw so a long single French word
+       (Confidentialité) still fits a 320px screen. Identical to the prototype from 408px up. */
+    font-size: min(11vw, clamp(2.8rem, 5vw, 5.2rem));
+    overflow-wrap: break-word;
+  }
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Letterspaced small caps label, the prototype nav style. */
+  .label {
+    @apply font-body text-label uppercase tracking-label;
+  }
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center border border-green px-4 py-[13px] text-center font-body text-btn font-semibold uppercase leading-none tracking-btn no-underline;
+  }
+  .btn-primary {
+    @apply bg-green text-white;
+  }
+}
