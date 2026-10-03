@@ -1,8 +1,8 @@
-import { StubPage } from "@/components/StubPage";
+import { SellPage } from "@/components/pages/SellPage";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata("fr", "sell");
 
 export default function FrSellPage() {
-  return <StubPage locale="fr" page="sell" />;
+  return <SellPage locale="fr" />;
 }

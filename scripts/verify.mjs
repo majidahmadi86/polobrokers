@@ -1,7 +1,7 @@
 // The permanent gate. Runs everything against a production build, never the dev server.
 //   npm run verify
 // lint, i18n parity, next build, copy check (sources + built HTML), then next start on VERIFY_PORT
-// (default 3112) for the link crawl and the responsive gate, then stops the server.
+// (default 3112) for the link crawl, the sell form test and the responsive gate, then stops the server.
 // Stops at the first failing gate and prints a summary.
 import { spawn, spawnSync } from "node:child_process";
 
@@ -58,6 +58,7 @@ try {
   } else {
     for (const [name, script] of [
       ["check:links", "scripts/check-links.mjs"],
+      ["check:forms", "scripts/check-forms.mjs"],
       ["check:responsive", "scripts/check-responsive.mjs"],
     ]) {
       if (!run(name, [script], { BASE_URL })) {

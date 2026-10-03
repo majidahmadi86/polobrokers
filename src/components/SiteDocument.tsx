@@ -2,7 +2,7 @@ import Script from "next/script";
 import type { ReactNode } from "react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { MOTION_SCRIPT } from "@/components/RevealObserver";
+import { MOTION_SCRIPT, RevealObserver } from "@/components/RevealObserver";
 import { fontVariables } from "@/lib/fonts";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import "@/app/globals.css";
@@ -31,6 +31,7 @@ export function SiteDocument({ locale, children }: { locale: Locale; children: R
           {children}
         </main>
         <Footer locale={locale} dict={dict} />
+        <RevealObserver />
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 // Sets:
 //   foundation  home at 390 and 1440 in EN and FR, drawer open at 390, accent test, OG image (commit 01)
 //   home        full homepage at 390 and 1440 in EN, and at 1440 in FR (commit 02)
+//   inner       /about and /collection at 1440 EN, /sell at 390 EN with the error state, /sell at 1440 FR (commit 03)
 // Pages are captured with reduced motion, so the entry fade never hides a section.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -66,6 +67,20 @@ try {
     const fr1440 = await grab("Home FR · 1440 · full page", "/fr", 1440, 900, { full: true });
     title = "Polo Brokers · commit 02 · homepage";
     rows = [[tile(en390, 390), tile(en1440, 700), tile(fr1440, 700)]];
+  } else if (SET === "inner") {
+    const about = await grab("/about EN · 1440 · full page", "/about", 1440, 900, { full: true });
+    const collection = await grab("/collection EN · 1440 · full page", "/collection", 1440, 900, { full: true });
+    const sellErrors = await grab("/sell EN · 390 · empty submit (error state)", "/sell", 390, 844, {
+      full: true,
+      before: async () => {
+        await page.click("form button[type=submit]");
+        await page.waitForTimeout(200);
+        await page.evaluate(() => window.scrollTo(0, 0));
+      },
+    });
+    const sellFr = await grab("/fr/sell FR · 1440 · full page", "/fr/sell", 1440, 900, { full: true });
+    title = "Polo Brokers · commit 03 · about, collection, sell";
+    rows = [[tile(about, 640), tile(collection, 640), tile(sellErrors, 390), tile(sellFr, 640)]];
   } else {
     throw new Error(`unknown SHEET_SET ${SET}`);
   }

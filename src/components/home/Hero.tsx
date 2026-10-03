@@ -1,9 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ExternalLink } from "@/components/ExternalLink";
 import { Monogram } from "@/components/Monogram";
-import { localePath, type Dictionary, type Locale } from "@/lib/i18n";
-import { INSTAGRAM_URL, SITE_NAME } from "@/lib/site";
+import { PrimaryActions } from "@/components/sections/PrimaryActions";
+import type { Dictionary, Locale } from "@/lib/i18n";
+import { SITE_NAME } from "@/lib/site";
 
 // Full-bleed photo with the ivory card. Desktop: card centred vertically on the left, as in the
 // prototype. Below 800px: the card sits over the lower part of the photo, the photo shifted so the
@@ -35,14 +34,7 @@ export function Hero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           <br />
           {t.tagline[1]}
         </p>
-        <div className="flex flex-wrap justify-center gap-[10px]">
-          <ExternalLink href={INSTAGRAM_URL} className="btn btn-primary">
-            {dict.buttons.discoverInstagram}
-          </ExternalLink>
-          <Link href={localePath(locale, "sell")} className="btn text-green">
-            {dict.buttons.sellToUs}
-          </Link>
-        </div>
+        <PrimaryActions locale={locale} dict={dict} />
       </div>
     </section>
   );

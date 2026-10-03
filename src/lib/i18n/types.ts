@@ -26,8 +26,9 @@ export type Dictionary = {
     home: string;
   };
   disclaimer: string;
+  /** Meta descriptions, each derived only from the copy on its page. Legal and privacy come later. */
+  descriptions: Record<"home" | "about" | "collection" | "sell", string>;
   home: {
-    metaDescription: string;
     hero: {
       imageAlt: string;
       tagline: [string, string];
@@ -59,6 +60,45 @@ export type Dictionary = {
       kicker: string;
       title: string;
       button: string;
+    };
+  };
+  aboutPage: {
+    whatWeDo: string;
+    whatWeDoLine: string;
+    whoWeWorkWith: string;
+    whoLine: string;
+    shipping: string;
+  };
+  collectionPage: {
+    line: string;
+  };
+  sellForm: {
+    name: string;
+    contact: string;
+    department: string;
+    category: string;
+    description: string;
+    choose: string;
+    departments: { men: string; women: string; children: string; mixed: string };
+    categories: string[];
+    submit: string;
+    note: string;
+    fallback: string;
+    errors: {
+      required: string;
+      choose: string;
+      minLength: string;
+      summary: string;
+    };
+    /** WhatsApp message template, in the page language. Labels include their colon. */
+    message: {
+      intro: string;
+      name: string;
+      contact: string;
+      department: string;
+      category: string;
+      details: string;
+      outro: string;
     };
   };
   notFound: {

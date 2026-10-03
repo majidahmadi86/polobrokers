@@ -1,8 +1,8 @@
-import { StubPage } from "@/components/StubPage";
+import { AboutPage } from "@/components/pages/AboutPage";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata("fr", "about");
 
 export default function FrAboutPage() {
-  return <StubPage locale="fr" page="about" />;
+  return <AboutPage locale="fr" />;
 }

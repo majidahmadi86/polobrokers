@@ -19,6 +19,7 @@ const config: Config = {
         line: "rgb(var(--line) / <alpha-value>)",
         "footer-bg": "rgb(var(--footer-bg) / <alpha-value>)",
         "footer-text": "rgb(var(--footer-text) / <alpha-value>)",
+        error: "rgb(var(--error) / <alpha-value>)",
       },
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],

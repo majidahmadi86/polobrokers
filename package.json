@@ -14,7 +14,8 @@
     "assets:brand": "node scripts/generate-brand-assets.mjs",
     "sheet": "node scripts/contact-sheet.mjs",
     "verify": "node scripts/verify.mjs",
-    "check:launch": "node scripts/check-launch.mjs"
+    "check:launch": "node scripts/check-launch.mjs",
+    "check:forms": "node scripts/check-forms.mjs"
   },
   "dependencies": {
     "next": "14.2.35",

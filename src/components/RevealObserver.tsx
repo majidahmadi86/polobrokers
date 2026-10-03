@@ -1,14 +1,17 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 // Pairs with MOTION_SCRIPT and the [data-reveal] rules in globals.css: marks each [data-reveal]
 // element revealed once it enters the viewport. Without JS, or with reduced motion, html.motion is
-// never set and everything is simply visible.
+// never set and everything is simply visible. Mounted once in the document and re-run on every route
+// change, so pages reached by client-side navigation are observed too.
 export const MOTION_SCRIPT =
   "if('IntersectionObserver' in window&&matchMedia('(prefers-reduced-motion: no-preference)').matches)document.documentElement.classList.add('motion')";
 
 export function RevealObserver() {
+  const pathname = usePathname();
   useEffect(() => {
     const root = document.documentElement;
     if (!root.classList.contains("motion")) return;
@@ -37,6 +40,6 @@ export function RevealObserver() {
       observer.disconnect();
       reduce.removeEventListener("change", onReduce);
     };
-  }, []);
+  }, [pathname]);
   return null;
 }

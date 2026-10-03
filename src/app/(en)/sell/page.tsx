@@ -1,8 +1,8 @@
-import { StubPage } from "@/components/StubPage";
+import { SellPage } from "@/components/pages/SellPage";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata("en", "sell");
 
 export default function EnSellPage() {
-  return <StubPage locale="en" page="sell" />;
+  return <SellPage locale="en" />;
 }

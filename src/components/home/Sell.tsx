@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ExternalLink } from "@/components/ExternalLink";
+import { ServicesStrip } from "@/components/sections/ServicesStrip";
 import type { Dictionary } from "@/lib/i18n";
 import { WHATSAPP_URL } from "@/lib/site";
 
@@ -26,17 +27,7 @@ export function Sell({ dict }: { dict: Dictionary }) {
           {t.title}
         </h2>
         <p data-reveal>{t.body}</p>
-        <ul data-reveal className="my-7 grid grid-cols-1 border-y border-line min-[800px]:grid-cols-3">
-          {t.features.map((feature) => (
-            <li
-              key={feature.title}
-              className="border-b border-line p-4 text-center last:border-0 min-[800px]:border-b-0 min-[800px]:border-r min-[800px]:last:border-r-0"
-            >
-              <strong className="block font-display text-[1.25rem] font-medium">{feature.title}</strong>
-              <small className="text-[.83rem] uppercase tracking-[.08em]">{feature.note}</small>
-            </li>
-          ))}
-        </ul>
+        <ServicesStrip dict={dict} className="my-7" />
         <p data-reveal>
           <ExternalLink href={WHATSAPP_URL} className="btn btn-gold">
             {t.button}
