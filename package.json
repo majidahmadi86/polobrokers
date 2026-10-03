@@ -15,7 +15,9 @@
     "sheet": "node scripts/contact-sheet.mjs",
     "verify": "node scripts/verify.mjs",
     "check:launch": "node scripts/check-launch.mjs",
-    "check:forms": "node scripts/check-forms.mjs"
+    "check:forms": "node scripts/check-forms.mjs",
+    "check:privacy": "node scripts/check-privacy.mjs",
+    "check:lighthouse": "node scripts/check-lighthouse.mjs"
   },
   "dependencies": {
     "next": "14.2.35",
@@ -30,6 +32,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
+    "lighthouse": "^13.5.0",
     "playwright": "^1.63.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",

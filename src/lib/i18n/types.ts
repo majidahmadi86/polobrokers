@@ -26,8 +26,10 @@ export type Dictionary = {
     home: string;
   };
   disclaimer: string;
-  /** Meta descriptions, each derived only from the copy on its page. Legal and privacy come later. */
-  descriptions: Record<"home" | "about" | "collection" | "sell", string>;
+  /** Meta descriptions, each derived only from the copy on its page. */
+  descriptions: Record<PageKey, string>;
+  /** H1 and meta title where they differ from the short nav label. */
+  docTitles: { legal: string; privacy: string };
   home: {
     hero: {
       imageAlt: string;
@@ -100,6 +102,33 @@ export type Dictionary = {
       details: string;
       outro: string;
     };
+  };
+  contactPage: {
+    title: string;
+    line: string;
+    whatsappButton: string;
+    instagramButton: string;
+    sellPrompt: { before: string; link: string; after: string };
+  };
+  legalPage: {
+    publisher: string;
+    published: string;
+    /** Labels include their colon, as typeset in each language. */
+    fields: { entityName: string; entityAddress: string; registrationNumber: string; publicationDirector: string };
+    contactLabel: string;
+    and: string;
+    hosting: string;
+    design: string;
+    trademarks: string;
+    trademarksText: string;
+    intellectualProperty: string;
+    intellectualPropertyText: string;
+    updated: string;
+  };
+  privacyPage: {
+    sections: { title: string; body: string }[];
+    controller: string;
+    updated: string;
   };
   notFound: {
     title: string;

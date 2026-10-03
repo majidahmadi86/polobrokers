@@ -3,6 +3,8 @@
 // Crawls from / and /fr. Fails when an internal link (a[href], link[href], og:image) does not answer
 // 200, when a page's html lang does not match its tree, when a sitemap URL is not a crawled page, or
 // when an unknown path does not answer 404. External links are listed, never fetched.
+// SEO basics per page: exactly one h1, a canonical to itself, hreflang en / fr / x-default (x-default
+// is EN) pointing at the matching page of each language.
 import { BASE_URL, ROUTES, langOf } from "./lib/site.mjs";
 
 const SITE_URL = "https://polobrokers.com";
@@ -45,6 +47,20 @@ while (queue.length) {
   }
   const lang = body.match(/<html[^>]*\slang="([^"]+)"/)?.[1];
   if (lang !== langOf(path)) failures.push(`lang   ${path} has html lang="${lang}", expected "${langOf(path)}"`);
+
+  // SEO basics, read from the server HTML (the RSC payload never contains a literal <h1 tag).
+  const h1s = (body.match(/<h1[ >]/g) || []).length;
+  if (h1s !== 1) failures.push(`h1     ${path} has ${h1s} h1 elements`);
+  const bare = langOf(path) === "fr" ? path.slice(3) || "/" : path;
+  const expected = { en: bare, fr: bare === "/" ? "/fr" : `/fr${bare}`, "x-default": bare };
+  // The root is written without its trailing slash (https://polobrokers.com): the same URL.
+  const norm = (u) => (u && u.endsWith("/") ? u.slice(0, -1) : u);
+  const canonical = body.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+  if (norm(canonical) !== norm(SITE_URL + path)) failures.push(`canon  ${path} canonical is ${canonical}`);
+  for (const [hreflang, target] of Object.entries(expected)) {
+    const href = body.match(new RegExp(`<link rel="alternate" hrefLang="${hreflang}" href="([^"]+)"`))?.[1];
+    if (norm(href) !== norm(SITE_URL + target)) failures.push(`hreflang ${path} ${hreflang} is ${href}, expected ${SITE_URL + target}`);
+  }
 
   const anchors = [...body.matchAll(/<a\s[^>]*>/gi)].map((m) => m[0]);
   for (const tag of anchors) {

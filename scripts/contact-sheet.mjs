@@ -4,6 +4,7 @@
 //   foundation  home at 390 and 1440 in EN and FR, drawer open at 390, accent test, OG image (commit 01)
 //   home        full homepage at 390 and 1440 in EN, and at 1440 in FR (commit 02)
 //   inner       /about and /collection at 1440 EN, /sell at 390 EN with the error state, /sell at 1440 FR (commit 03)
+//   info        /about at 1440 EN, /contact at 390 EN, /legal at 1440 FR, /privacy at 390 FR (commit 04)
 // Pages are captured with reduced motion, so the entry fade never hides a section.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -81,6 +82,13 @@ try {
     const sellFr = await grab("/fr/sell FR · 1440 · full page", "/fr/sell", 1440, 900, { full: true });
     title = "Polo Brokers · commit 03 · about, collection, sell";
     rows = [[tile(about, 640), tile(collection, 640), tile(sellErrors, 390), tile(sellFr, 640)]];
+  } else if (SET === "info") {
+    const about = await grab("/about EN · 1440 · full page", "/about", 1440, 900, { full: true });
+    const contact = await grab("/contact EN · 390 · full page", "/contact", 390, 844, { full: true });
+    const legal = await grab("/fr/legal FR · 1440 · full page", "/fr/legal", 1440, 900, { full: true });
+    const privacy = await grab("/fr/privacy FR · 390 · full page", "/fr/privacy", 390, 844, { full: true });
+    title = "Polo Brokers · commit 04 · about polish, contact, legal, privacy";
+    rows = [[tile(about, 640), tile(contact, 390), tile(legal, 640), tile(privacy, 390)]];
   } else {
     throw new Error(`unknown SHEET_SET ${SET}`);
   }

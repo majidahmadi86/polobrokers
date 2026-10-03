@@ -41,6 +41,13 @@ export const en: Dictionary = {
       "An independent specialist in original, second-hand and vintage Ralph Lauren. Single pieces, complete wardrobes and wholesale lots, shipping from Europe.",
     collection: "Vintage for every generation. Every piece is posted and sold on Instagram.",
     sell: "Sell your vintage items to us. We consider individual garments, complete wardrobes and wholesale collections.",
+    contact: "Write to us on WhatsApp or send a message on Instagram.",
+    legal: "This website is published by Polo Brokers. Ralph Lauren and Polo are trademarks of Ralph Lauren Corporation.",
+    privacy: "This website uses no cookies, no analytics and no advertising trackers, and has no user accounts.",
+  },
+  docTitles: {
+    legal: "Legal notice",
+    privacy: "Privacy policy",
   },
   home: {
     hero: {
@@ -127,6 +134,60 @@ export const en: Dictionary = {
       details: "Details:",
       outro: "I will send photos in this chat.",
     },
+  },
+  contactPage: {
+    title: "Get in touch.",
+    line: "Write to us on WhatsApp or send a message on Instagram.",
+    whatsappButton: "Message us",
+    instagramButton: "Open Instagram",
+    sellPrompt: { before: "Selling pieces? Use our ", link: "sell form", after: "." },
+  },
+  legalPage: {
+    publisher: "Publisher",
+    published: "This website is published by Polo Brokers.",
+    fields: {
+      entityName: "Company:",
+      entityAddress: "Address:",
+      registrationNumber: "Registration number:",
+      publicationDirector: "Publication director:",
+    },
+    contactLabel: "Contact:",
+    and: "and",
+    hosting: "Hosting",
+    design: "Design and development",
+    trademarks: "Trademarks",
+    trademarksText:
+      "Ralph Lauren and Polo are trademarks of Ralph Lauren Corporation. Polo Brokers is an independent reseller of authentic pre-owned Ralph Lauren products and is not affiliated with or endorsed by Ralph Lauren Corporation. Brand names are used only to describe the products we resell.",
+    intellectualProperty: "Intellectual property",
+    intellectualPropertyText:
+      "The content of this website, including its text, images, name and monogram, may not be reproduced without permission.",
+    updated: "Last updated:",
+  },
+  privacyPage: {
+    sections: [
+      {
+        title: "Overview",
+        body: "This website uses no cookies, no analytics and no advertising trackers, and has no user accounts. Fonts and images are served from this website itself.",
+      },
+      {
+        title: "The sell form",
+        body: "The sell form sends and stores nothing on this website. When you press Continue on WhatsApp, your browser opens WhatsApp with your message prefilled. Nothing is sent until you send it yourself.",
+      },
+      {
+        title: "WhatsApp and Instagram",
+        body: "Messages you send us on WhatsApp or Instagram are handled by those services, operated by Meta, under their own privacy policies. We use the details you send us only to answer your request and to complete any purchase, sale or trade we agree on.",
+      },
+      {
+        title: "Server logs",
+        body: "Like any website, our hosting server records technical data such as IP address, browser type and the page requested, for security and to keep the site running.",
+      },
+      {
+        title: "Your rights",
+        body: "Under the GDPR, you may ask to access, correct or delete personal data we hold about you, or object to its use. Contact us on WhatsApp or Instagram. You may also lodge a complaint with your data protection authority.",
+      },
+    ],
+    controller: "Data controller:",
+    updated: "Last updated:",
   },
   notFound: {
     title: "Page not found",

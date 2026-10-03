@@ -42,6 +42,14 @@ export const fr: Dictionary = {
       "Un spécialiste indépendant du Ralph Lauren original, de seconde main et vintage. Pièces uniques, garde-robes complètes et lots de gros, expédition depuis l'Europe.",
     collection: "Le vintage pour chaque génération. Chaque pièce est publiée et vendue sur Instagram.",
     sell: "Vendez-nous vos pièces vintage. Nous étudions les pièces à l'unité, les garde-robes complètes et les lots de gros.",
+    contact: "Écrivez-nous sur WhatsApp ou envoyez-nous un message sur Instagram.",
+    legal: "Ce site est édité par Polo Brokers. Ralph Lauren et Polo sont des marques de Ralph Lauren Corporation.",
+    privacy:
+      "Ce site n'utilise ni cookies, ni outils de mesure d'audience, ni traceurs publicitaires, et ne comporte aucun compte utilisateur.",
+  },
+  docTitles: {
+    legal: "Mentions légales",
+    privacy: "Politique de confidentialité",
   },
   home: {
     hero: {
@@ -128,6 +136,60 @@ export const fr: Dictionary = {
       details: "Détails :",
       outro: "J'envoie les photos dans cette conversation.",
     },
+  },
+  contactPage: {
+    title: "Nous contacter.",
+    line: "Écrivez-nous sur WhatsApp ou envoyez-nous un message sur Instagram.",
+    whatsappButton: "Nous écrire",
+    instagramButton: "Ouvrir Instagram",
+    sellPrompt: { before: "Vous vendez des pièces ? Utilisez notre ", link: "formulaire de vente", after: "." },
+  },
+  legalPage: {
+    publisher: "Éditeur",
+    published: "Ce site est édité par Polo Brokers.",
+    fields: {
+      entityName: "Raison sociale :",
+      entityAddress: "Adresse :",
+      registrationNumber: "Numéro d'immatriculation :",
+      publicationDirector: "Directeur de la publication :",
+    },
+    contactLabel: "Contact :",
+    and: "et",
+    hosting: "Hébergement",
+    design: "Conception et réalisation",
+    trademarks: "Marques",
+    trademarksText:
+      "Ralph Lauren et Polo sont des marques de Ralph Lauren Corporation. Polo Brokers est un revendeur indépendant de produits Ralph Lauren authentiques de seconde main, non affilié à Ralph Lauren Corporation ni approuvé par celle-ci. Les noms de marque sont utilisés uniquement pour décrire les produits que nous revendons.",
+    intellectualProperty: "Propriété intellectuelle",
+    intellectualPropertyText:
+      "Le contenu de ce site, notamment ses textes, ses images, son nom et son monogramme, ne peut être reproduit sans autorisation.",
+    updated: "Dernière mise à jour :",
+  },
+  privacyPage: {
+    sections: [
+      {
+        title: "En bref",
+        body: "Ce site n'utilise ni cookies, ni outils de mesure d'audience, ni traceurs publicitaires, et ne comporte aucun compte utilisateur. Les polices et les images sont servies par le site lui-même.",
+      },
+      {
+        title: "Le formulaire de vente",
+        body: "Le formulaire de vente n'envoie et n'enregistre rien sur ce site. Lorsque vous appuyez sur Continuer sur WhatsApp, votre navigateur ouvre WhatsApp avec votre message prérempli. Rien n'est envoyé tant que vous ne l'envoyez pas vous-même.",
+      },
+      {
+        title: "WhatsApp et Instagram",
+        body: "Les messages que vous nous envoyez sur WhatsApp ou Instagram sont traités par ces services, exploités par Meta, selon leurs propres politiques de confidentialité. Nous utilisons les informations que vous nous transmettez uniquement pour répondre à votre demande et finaliser tout achat, vente ou échange convenu.",
+      },
+      {
+        title: "Journaux du serveur",
+        body: "Comme tout site web, notre serveur d'hébergement enregistre des données techniques, telles que l'adresse IP, le type de navigateur et la page demandée, à des fins de sécurité et de bon fonctionnement.",
+      },
+      {
+        title: "Vos droits",
+        body: "Conformément au RGPD, vous pouvez demander l'accès à vos données personnelles, leur rectification ou leur suppression, ou vous opposer à leur utilisation. Contactez-nous sur WhatsApp ou Instagram. Vous pouvez également introduire une réclamation auprès de votre autorité de protection des données.",
+      },
+    ],
+    controller: "Responsable du traitement :",
+    updated: "Dernière mise à jour :",
   },
   notFound: {
     title: "Page introuvable",

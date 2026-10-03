@@ -26,16 +26,20 @@ export function rootMetadata(locale: Locale): Metadata {
   };
 }
 
+/** The page heading: the full document title where it differs from the nav label (legal, privacy). */
+export function pageTitle(dict: Dictionary, page: PageKey): string {
+  return page === "legal" || page === "privacy" ? dict.docTitles[page] : dict.pages[page];
+}
+
 /** Per page: title, canonical, hreflang alternates en / fr / x-default (x-default is EN), OG. */
 export function pageMetadata(locale: Locale, page: PageKey): Metadata {
   const dict = getDictionary(locale);
   const canonical = localePath(locale, page);
-  const title = page === "home" ? SITE_NAME : `${dict.pages[page]} · ${SITE_NAME}`;
-  // Pages without their copy yet (legal, privacy) have no description until it lands.
-  const description = page in dict.descriptions ? dict.descriptions[page as keyof Dictionary["descriptions"]] : undefined;
+  const title = page === "home" ? SITE_NAME : `${pageTitle(dict, page)} · ${SITE_NAME}`;
+  const description = dict.descriptions[page];
   return {
-    title: page === "home" ? { absolute: SITE_NAME } : dict.pages[page],
-    ...(description ? { description } : {}),
+    title: page === "home" ? { absolute: SITE_NAME } : pageTitle(dict, page),
+    description,
     alternates: {
       canonical,
       languages: {

@@ -1,8 +1,8 @@
-import { StubPage } from "@/components/StubPage";
+import { PrivacyPage } from "@/components/pages/PrivacyPage";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata("fr", "privacy");
 
 export default function FrPrivacyPage() {
-  return <StubPage locale="fr" page="privacy" />;
+  return <PrivacyPage locale="fr" />;
 }
