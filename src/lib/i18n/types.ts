@@ -26,6 +26,41 @@ export type Dictionary = {
     home: string;
   };
   disclaimer: string;
+  home: {
+    metaDescription: string;
+    hero: {
+      imageAlt: string;
+      tagline: [string, string];
+    };
+    about: {
+      title: [string, string];
+      lead: string;
+      body: string;
+    };
+    selection: {
+      kicker: string;
+      title: string;
+      men: string;
+      women: string;
+      children: string;
+      menAlt: string;
+      womenAlt: string;
+      childrenAlt: string;
+    };
+    sell: {
+      imageAlt: string;
+      kicker: string;
+      title: string;
+      body: string;
+      features: { title: string; note: string }[];
+      button: string;
+    };
+    follow: {
+      kicker: string;
+      title: string;
+      button: string;
+    };
+  };
   notFound: {
     title: string;
     back: string;

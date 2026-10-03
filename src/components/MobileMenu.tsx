@@ -117,7 +117,7 @@ export function MobileMenu({ locale, dict, open, onClose, returnFocusRef }: Mobi
                     href={href}
                     onClick={onClose}
                     aria-current={pathname === href ? "page" : undefined}
-                    className="flex min-h-[56px] items-center font-display text-[1.75rem] font-medium leading-tight text-ink no-underline aria-[current=page]:text-bronze"
+                    className="flex min-h-[56px] items-center font-display text-[1.75rem] font-medium leading-tight text-ink no-underline aria-[current=page]:text-gold-text"
                   >
                     {dict.pages[page]}
                   </Link>

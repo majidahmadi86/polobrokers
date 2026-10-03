@@ -2,20 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Prototype tokens (docs/prototype/TOKENS.md). */
+/* Prototype tokens (docs/prototype/TOKENS.md), as RGB channels so Tailwind opacity modifiers
+   (bg-warm/[.96]) work: use them as rgb(var(--name)) in plain CSS. */
 :root {
-  --green: #0b2e24;
-  --ivory: #f7f1e4;
-  --warm: #fffdf8;
-  --gold: #b08a52;
-  --ink: #12271f;
-  --rule: #d3bd98;
-  --panel-border: #c8a66d;
-  --kicker: #dac49f;
-  --bronze: #85653a;
-  --line: #cdbb98;
-  --footer-bg: #071d18;
-  --footer-text: #c6baa4;
+  --green: 11 46 36; /* #0b2e24 */
+  --ivory: 247 241 228; /* #f7f1e4 */
+  --warm: 255 253 248; /* #fffdf8 */
+  --gold: 176 138 82; /* #b08a52 */
+  --ink: 18 39 31; /* #12271f */
+  --rule: 211 189 152; /* #d3bd98 */
+  --panel-border: 200 166 109; /* #c8a66d */
+  --gold-pale: 218 196 159; /* #dac49f */
+  /* #b08a52 darkened in HSL (hue and saturation kept) to the lightest shade reaching 4.5:1 on both
+     ivory (4.53) and warm white (5.01). Gold text on light grounds; gold itself is for rules, fills
+     and text on green (4.62). */
+  --gold-text: 135 105 62; /* #87693e */
+  --line: 205 187 152; /* #cdbb98 */
+  --footer-bg: 7 29 24; /* #071d18 */
+  --footer-text: 198 186 164; /* #c6baa4 */
 }
 
 @layer base {
@@ -37,7 +41,7 @@
     overflow-wrap: break-word;
   }
   :focus-visible {
-    outline: 2px solid var(--gold);
+    outline: 2px solid rgb(var(--gold));
     outline-offset: 2px;
   }
 }
@@ -52,5 +56,27 @@
   }
   .btn-primary {
     @apply bg-green text-white;
+  }
+  /* Gold fill with ink text (4.94:1). White on gold, as in the prototype, is only 3.18:1. */
+  .btn-gold {
+    @apply border-gold bg-gold text-ink;
+  }
+}
+
+/* Section entry: a subtle fade-up. Only when JS has marked the page (html.motion, set before paint
+   and never under prefers-reduced-motion), so content is fully visible without JS. */
+html.motion [data-reveal] {
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+html.motion [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+@media print {
+  html.motion [data-reveal] {
+    opacity: 1;
+    transform: none;
   }
 }

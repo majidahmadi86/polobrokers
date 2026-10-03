@@ -62,7 +62,7 @@ function audit(rootSelector) {
     const range = document.createRange();
     range.selectNodeContents(node);
     const rects = [...range.getClientRects()].filter((r) => r.width >= 1 && r.height >= 1);
-    if (rects.length) runs.push({ el: node.parentElement, text: node.textContent.trim(), rects });
+    if (rects.length) runs.push({ el: node.parentElement, node, text: node.textContent.trim(), rects });
   }
 
   // Overlap: line boxes of two different text runs crossing each other.
@@ -91,11 +91,15 @@ function audit(rootSelector) {
     })
     .map((el) => el.getBoundingClientRect());
   for (const run of runs) {
-    for (const r of run.rects) {
+    for (const [rectIndex, r] of run.rects.entries()) {
       const over = images.some((img) => Math.min(r.right, img.right) - Math.max(r.left, img.left) > 1 && Math.min(r.bottom, img.bottom) - Math.max(r.top, img.top) > 1);
       if (!over) continue;
       run.el.setAttribute("data-gate-text", "");
-      out.imageTargets.push({ label: run.text.slice(0, 30), color: parse(getComputedStyle(run.el).color), x: r.left + scrollX, y: r.top + scrollY, w: r.width, h: r.height });
+      // Located again at measuring time (scrolled into view), so only an address is kept here.
+      const gateId = run.el.dataset.gateId || String(out.imageTargets.length);
+      run.el.dataset.gateId = gateId;
+      const nodeIndex = [...run.el.childNodes].indexOf(run.node);
+      out.imageTargets.push({ label: run.text.slice(0, 30), color: parse(getComputedStyle(run.el).color), gateId, nodeIndex, rectIndex });
     }
   }
 
@@ -130,8 +134,22 @@ async function measureImageText(page, targets) {
   try {
     for (const t of targets) {
       if (!t.color) continue;
-      const clip = { x: Math.max(0, Math.floor(t.x)), y: Math.max(0, Math.floor(t.y)), width: Math.max(2, Math.ceil(t.w)), height: Math.max(2, Math.ceil(t.h)) };
-      const png = await page.screenshot({ clip, fullPage: true });
+      // Scroll the line into view and clip in viewport coordinates: a full-page capture resizes the
+      // viewport and can move the layout out from under document coordinates.
+      const box = await page.evaluate(({ gateId, nodeIndex, rectIndex }) => {
+        const el = document.querySelector('[data-gate-id="' + gateId + '"]');
+        el.scrollIntoView({ block: "center", inline: "nearest" });
+        const range = document.createRange();
+        range.selectNodeContents(el.childNodes[nodeIndex]);
+        const r = [...range.getClientRects()].filter((x) => x.width >= 1 && x.height >= 1)[rectIndex];
+        return r ? { x: r.left, y: r.top, w: r.width, h: r.height } : null;
+      }, t);
+      if (!box) continue;
+      const vp = page.viewportSize();
+      const x = Math.max(0, Math.floor(box.x));
+      const y = Math.max(0, Math.floor(box.y));
+      const clip = { x, y, width: Math.max(2, Math.min(vp.width - x, Math.ceil(box.w))), height: Math.max(2, Math.min(vp.height - y, Math.ceil(box.h))) };
+      const png = await page.screenshot({ clip });
       const { data, info } = await sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true });
       const [cr, cg, cb, ca] = t.color;
       const ratios = [];
@@ -149,7 +167,13 @@ async function measureImageText(page, targets) {
     }
   } finally {
     await style.evaluate((node) => node.remove());
-    await page.evaluate(() => document.querySelectorAll("[data-gate-text]").forEach((el) => el.removeAttribute("data-gate-text")));
+    await page.evaluate(() => {
+      for (const el of document.querySelectorAll("[data-gate-text]")) {
+        el.removeAttribute("data-gate-text");
+        el.removeAttribute("data-gate-id");
+      }
+      window.scrollTo(0, 0);
+    });
   }
   return failures;
 }
