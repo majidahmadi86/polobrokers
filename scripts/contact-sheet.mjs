@@ -5,6 +5,9 @@
 //   home        full homepage at 390 and 1440 in EN, and at 1440 in FR (commit 02)
 //   inner       /about and /collection at 1440 EN, /sell at 390 EN with the error state, /sell at 1440 FR (commit 03)
 //   info        /about at 1440 EN, /contact at 390 EN, /legal at 1440 FR, /privacy at 390 FR (commit 04)
+//   feed        Home Follow section with the mock grid at 1440 and 390, /fr/collection at 1440 with the
+//               grid (BASE_URL: a server with IG_MOCK=1), the Follow fallback at 390 (FALLBACK_URL:
+//               a server without a feed) (commit 05)
 // Pages are captured with reduced motion, so the entry fade never hides a section.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -24,6 +27,17 @@ try {
     await page.goto(BASE_URL + path, { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
     if (before) await before();
+    if (full) {
+      // Bring lazy images in before a full-page capture.
+      await page.evaluate(async () => {
+        for (let y = 0; y < document.body.scrollHeight; y += 500) {
+          window.scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 30));
+        }
+        window.scrollTo(0, 0);
+      });
+      await page.waitForLoadState("networkidle");
+    }
     return { label, data: (await page.screenshot({ fullPage: full })).toString("base64") };
   };
   const tile = (s, w) => `<figure><img src="data:image/png;base64,${s.data}" style="width:${w}px"><figcaption>${s.label}</figcaption></figure>`;
@@ -89,6 +103,27 @@ try {
     const privacy = await grab("/fr/privacy FR · 390 · full page", "/fr/privacy", 390, 844, { full: true });
     title = "Polo Brokers · commit 04 · about polish, contact, legal, privacy";
     rows = [[tile(about, 640), tile(contact, 390), tile(legal, 640), tile(privacy, 390)]];
+  } else if (SET === "feed") {
+    const FALLBACK_URL = (process.env.FALLBACK_URL || "").replace(/[/]$/, "");
+    if (!FALLBACK_URL) throw new Error("SHEET_SET=feed needs FALLBACK_URL");
+    // The Follow section only: the last section of the page.
+    const follow = async (label, base, path, width) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(base + path, { waitUntil: "networkidle" });
+      await page.evaluate(() => document.fonts.ready);
+      const section = page.locator("main section").last();
+      // Lazy tiles outside the viewport would be captured empty: load and decode them all first.
+      await page.evaluate(() => Promise.all([...document.images].map((img) => ((img.loading = "eager"), img.decode().catch(() => {})))));
+      await section.scrollIntoViewIfNeeded();
+      await page.waitForLoadState("networkidle");
+      return { label, data: (await section.screenshot()).toString("base64") };
+    };
+    const grid1440 = await follow("Home EN · 1440 · Follow with the mock grid", BASE_URL, "/", 1440);
+    const grid390 = await follow("Home EN · 390 · Follow with the mock grid", BASE_URL, "/", 390);
+    const collection = await grab("/fr/collection FR · 1440 · full page with the grid", "/fr/collection", 1440, 900, { full: true });
+    const fallback = await follow("Home EN · 390 · Follow fallback (no feed)", FALLBACK_URL, "/", 390);
+    title = "Polo Brokers · commit 05 · live Instagram feed (mock) and fallback";
+    rows = [[tile(grid1440, 900), tile(grid390, 390), tile(fallback, 390)], [tile(collection, 640)]];
   } else {
     throw new Error(`unknown SHEET_SET ${SET}`);
   }

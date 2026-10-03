@@ -3,6 +3,7 @@
 
 # next.js
 /.next/
+/.next-*/
 /out/
 
 # production
@@ -15,8 +16,12 @@
 # debug
 npm-debug.log*
 
-# env files
+# env files (the example is committed)
 .env*
+!.env.example
+
+# Instagram feed data: token, cached media (local: ./.data, VPS: IG_DATA_DIR outside the app)
+/.data/
 
 # typescript
 *.tsbuildinfo

@@ -17,12 +17,15 @@
     "check:launch": "node scripts/check-launch.mjs",
     "check:forms": "node scripts/check-forms.mjs",
     "check:privacy": "node scripts/check-privacy.mjs",
-    "check:lighthouse": "node scripts/check-lighthouse.mjs"
+    "check:lighthouse": "node scripts/check-lighthouse.mjs",
+    "check:ig": "node scripts/check-ig.mjs",
+    "check:ig-site": "node scripts/check-ig-site.mjs"
   },
   "dependencies": {
     "next": "14.2.35",
     "react": "^18",
     "react-dom": "^18",
+    "server-only": "^0.0.1",
     "sharp": "^0.34.5"
   },
   "devDependencies": {

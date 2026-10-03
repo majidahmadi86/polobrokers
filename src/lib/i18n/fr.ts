@@ -191,6 +191,10 @@ export const fr: Dictionary = {
     controller: "Responsable du traitement :",
     updated: "Dernière mise à jour :",
   },
+  instagramFeed: {
+    fallbackAlt: "Polo Brokers sur Instagram",
+    opens: "ouvre Instagram",
+  },
   notFound: {
     title: "Page introuvable",
     back: "Retour à l’accueil",

@@ -189,6 +189,10 @@ export const en: Dictionary = {
     controller: "Data controller:",
     updated: "Last updated:",
   },
+  instagramFeed: {
+    fallbackAlt: "Polo Brokers on Instagram",
+    opens: "opens Instagram",
+  },
   notFound: {
     title: "Page not found",
     back: "Back to home",

@@ -130,6 +130,12 @@ export type Dictionary = {
     controller: string;
     updated: string;
   };
+  instagramFeed: {
+    /** Alt text when a post has no usable caption. */
+    fallbackAlt: string;
+    /** Appended to each tile's accessible name. */
+    opens: string;
+  };
   notFound: {
     title: string;
     back: string;
