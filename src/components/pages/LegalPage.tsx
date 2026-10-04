@@ -4,32 +4,40 @@ import { ProseBody, ProseSection } from "@/components/sections/ProseSection";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import { LEGAL } from "@/lib/legal";
 import { pageTitle } from "@/lib/seo";
-import { INSTAGRAM_URL, WHATSAPP_URL } from "@/lib/site";
+import type { ReactNode } from "react";
+import { INSTAGRAM_URL, WHATSAPP_URL, formatPhoneNumber } from "@/lib/site";
 
 const link = "text-green underline decoration-gold underline-offset-4";
-const FIELDS = ["entityName", "entityAddress", "registrationNumber", "publicationDirector"] as const;
 
 // /legal. Facts come from src/lib/legal.ts; a null fact renders nothing, not even its label.
 export function LegalPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.legalPage;
-  const known = FIELDS.filter((field) => LEGAL[field] !== null);
+  // Publisher facts in order; a null fact is left out entirely.
+  const rows: [string, ReactNode][] = [];
+  if (LEGAL.entityName) rows.push([t.fields.entityName, LEGAL.entityName]);
+  if (LEGAL.entityAddress) rows.push([t.fields.entityAddress, LEGAL.entityAddress[locale]]);
+  if (LEGAL.registrationNumber) rows.push([t.fields.registrationNumber, LEGAL.registrationNumber]);
+  rows.push([
+    t.fields.phone,
+    <a key="tel" href={`tel:+${LEGAL.phone}`} className={`${link} inline-flex min-h-[44px] items-center`}>
+      {formatPhoneNumber(LEGAL.phone)}
+    </a>,
+  ]);
   return (
     <>
       <PageHeader title={pageTitle(dict, "legal")} />
       <ProseBody>
         <ProseSection title={t.publisher}>
           <p>{t.published}</p>
-          {known.length > 0 && (
-            <dl className="space-y-1">
-              {known.map((field) => (
-                <div key={field}>
-                  <dt className="inline">{t.fields[field]} </dt>
-                  <dd className="inline">{LEGAL[field]}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
+          <dl className="space-y-1">
+            {rows.map(([label, value]) => (
+              <div key={label}>
+                <dt className="inline">{label} </dt>
+                <dd className="inline">{value}</dd>
+              </div>
+            ))}
+          </dl>
           <p>
             {t.contactLabel}{" "}
             <ExternalLink href={WHATSAPP_URL} className={link}>

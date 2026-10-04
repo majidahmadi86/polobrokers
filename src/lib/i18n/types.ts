@@ -107,6 +107,7 @@ export type Dictionary = {
     title: string;
     line: string;
     whatsappButton: string;
+    call: string;
     instagramButton: string;
     sellPrompt: { before: string; link: string; after: string };
   };
@@ -114,7 +115,7 @@ export type Dictionary = {
     publisher: string;
     published: string;
     /** Labels include their colon, as typeset in each language. */
-    fields: { entityName: string; entityAddress: string; registrationNumber: string; publicationDirector: string };
+    fields: { entityName: string; entityAddress: string; registrationNumber: string; phone: string };
     contactLabel: string;
     and: string;
     hosting: string;

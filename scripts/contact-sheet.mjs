@@ -8,6 +8,7 @@
 //   feed        Home Follow section with the mock grid at 1440 and 390, /fr/collection at 1440 with the
 //               grid (BASE_URL: a server with IG_MOCK=1), the Follow fallback at 390 (FALLBACK_URL:
 //               a server without a feed) (commit 05)
+//   details     /legal at 1440 EN, /fr/privacy at 390 (rights section included), /contact at 390 EN (commit 06a)
 // Pages are captured with reduced motion, so the entry fade never hides a section.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -124,6 +125,12 @@ try {
     const fallback = await follow("Home EN · 390 · Follow fallback (no feed)", FALLBACK_URL, "/", 390);
     title = "Polo Brokers · commit 05 · live Instagram feed (mock) and fallback";
     rows = [[tile(grid1440, 900), tile(grid390, 390), tile(fallback, 390)], [tile(collection, 640)]];
+  } else if (SET === "details") {
+    const legal = await grab("/legal EN · 1440 · full page", "/legal", 1440, 900, { full: true });
+    const privacy = await grab("/fr/privacy FR · 390 · full page (Vos droits)", "/fr/privacy", 390, 844, { full: true });
+    const contact = await grab("/contact EN · 390 · full page", "/contact", 390, 844, { full: true });
+    title = "Polo Brokers · commit 06a · legal entity, Swiss number, Swiss data protection";
+    rows = [[tile(legal, 760), tile(privacy, 390), tile(contact, 390)]];
   } else {
     throw new Error(`unknown SHEET_SET ${SET}`);
   }

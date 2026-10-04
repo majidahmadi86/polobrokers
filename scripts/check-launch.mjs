@@ -1,12 +1,13 @@
 // Launch gate. Fails while anything provisional is left:
 //   temp      a temporary image (temp-*, crops of the prototype assets) referenced in src/
-//   legal     a field of src/lib/legal.ts still null (pending from Zac)
+//   legal     a required field of src/lib/legal.ts (LEGAL_REQUIRED) still null
 //   pending   "PENDING CONFIRMATION" still in src/lib/site.ts (the WhatsApp number)
 //   npm run check:launch
 // Not part of npm run verify on purpose: it is expected to fail until launch, then it becomes the
 // final gate before going live.
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import ts from "typescript";
 
 const TEMP = /temp-[a-z0-9-]+[.](jpe?g|png|webp|avif|gif|svg)/gi;
@@ -34,13 +35,19 @@ for (const file of walk("src")) {
     });
 }
 
-// legal.ts has no imports, so it can be transpiled and loaded on its own.
-const legalSource = ts.transpileModule(readFileSync("src/lib/legal.ts", "utf8"), {
-  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2020 },
-}).outputText;
-const { LEGAL } = await import(`data:text/javascript;base64,${Buffer.from(legalSource).toString("base64")}`);
-for (const [key, value] of Object.entries(LEGAL)) {
-  if (value === null) hits.push(`legal    src/lib/legal.ts  ${key} is null (pending from Zac)`);
+// legal.ts imports site.ts: both are transpiled into a scratch folder and loaded from there.
+const scratch = resolve(".data/launch-check");
+mkdirSync(scratch, { recursive: true });
+for (const name of ["site", "legal"]) {
+  const { outputText } = ts.transpileModule(readFileSync(`src/lib/${name}.ts`, "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2020 },
+  });
+  writeFileSync(join(scratch, `${name}.mjs`), outputText.replace(/from "[.][/]([a-z]+)"/g, (_, m) => `from "./${m}.mjs"`));
+}
+const { LEGAL, LEGAL_REQUIRED } = await import(pathToFileURL(join(scratch, "legal.mjs")).href);
+rmSync(scratch, { recursive: true, force: true });
+for (const key of LEGAL_REQUIRED) {
+  if (LEGAL[key] === null) hits.push(`legal    src/lib/legal.ts  ${key} is null (required, pending from Zac)`);
 }
 
 readFileSync("src/lib/site.ts", "utf8")

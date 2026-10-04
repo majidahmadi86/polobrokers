@@ -11,7 +11,7 @@
 import { chromium } from "playwright";
 import { BASE_URL } from "./lib/site.mjs";
 
-const NUMBER = "66816964798";
+const NUMBER = "41768295628";
 const NL = String.fromCharCode(10);
 const CASES = [
   {
