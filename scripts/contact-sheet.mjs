@@ -9,6 +9,7 @@
 //               grid (BASE_URL: a server with IG_MOCK=1), the Follow fallback at 390 (FALLBACK_URL:
 //               a server without a feed) (commit 05)
 //   details     /legal at 1440 EN, /fr/privacy at 390 (rights section included), /contact at 390 EN (commit 06a)
+//   prose       /legal and /privacy side by side, both 1440 EN at the same scale (commit 07)
 // Pages are captured with reduced motion, so the entry fade never hides a section.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -131,6 +132,11 @@ try {
     const contact = await grab("/contact EN · 390 · full page", "/contact", 390, 844, { full: true });
     title = "Polo Brokers · commit 06a · legal entity, Swiss number, Swiss data protection";
     rows = [[tile(legal, 760), tile(privacy, 390), tile(contact, 390)]];
+  } else if (SET === "prose") {
+    const legal = await grab("/legal EN · 1440 · full page", "/legal", 1440, 900, { full: true });
+    const privacy = await grab("/privacy EN · 1440 · full page", "/privacy", 1440, 900, { full: true });
+    title = "Polo Brokers · commit 07 · /legal and /privacy at the same viewport and scale";
+    rows = [[tile(legal, 900), tile(privacy, 900)]];
   } else {
     throw new Error(`unknown SHEET_SET ${SET}`);
   }
