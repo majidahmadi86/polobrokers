@@ -56,6 +56,9 @@ readFileSync("src/lib/site.ts", "utf8")
     if (line.includes(PENDING)) hits.push(`pending  src/lib/site.ts:${i + 1}  ${line.trim().slice(0, 70)}`);
   });
 
+// A reminder, not a failure: the indexing switch lives in the server environment, not in the code.
+console.log("Before launch: add PB_INDEXABLE=1 to the VPS .env.local, then run deploy.sh");
+
 if (hits.length) {
   console.error(`check:launch FAILED · ${hits.length} item(s) to resolve before launch${NL}${hits.join(NL)}`);
   process.exit(1);

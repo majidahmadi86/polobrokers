@@ -20,3 +20,8 @@ export function formatPhoneNumber(digits: string): string {
   return `+${digits}`;
 }
 export const WHATSAPP_DISPLAY = formatPhoneNumber(WHATSAPP_NUMBER);
+
+// Preview switch, read at build time. Until launch the site is built without PB_INDEXABLE: robots.txt
+// disallows everything and every page says noindex, nofollow. Launch: PB_INDEXABLE=1 in the VPS
+// .env.local, then deploy.
+export const INDEXABLE = process.env.PB_INDEXABLE === "1";
