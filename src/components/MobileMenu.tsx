@@ -94,7 +94,7 @@ export function MobileMenu({ locale, dict, open, onClose, returnFocusRef }: Mobi
       hidden={!open}
       className="fixed inset-0 z-50 overflow-y-auto bg-ivory nav:hidden"
     >
-      <div className="flex items-center justify-between gap-4 border-b border-rule bg-warm/[.96] px-[5vw] py-[15px] min-[800px]:py-5">
+      <div className="flex items-center justify-between gap-4 border-b border-rule bg-warm/[.96] px-[5vw] py-[10px] min-[800px]:py-3">
         <Brand locale={locale} dict={dict} onNavigate={onClose} />
         <button
           ref={closeRef}

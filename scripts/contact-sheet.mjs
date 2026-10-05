@@ -10,6 +10,7 @@
 //               a server without a feed) (commit 05)
 //   details     /legal at 1440 EN, /fr/privacy at 390 (rights section included), /contact at 390 EN (commit 06a)
 //   prose       /legal and /privacy side by side, both 1440 EN at the same scale (commit 07)
+//   logo        header at 320, 390 and 1440, hero at 390 and 1440, the OG image (commit 09b)
 // Pages are captured with reduced motion, so the entry fade never hides a section.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -137,6 +138,21 @@ try {
     const privacy = await grab("/privacy EN · 1440 · full page", "/privacy", 1440, 900, { full: true });
     title = "Polo Brokers · commit 07 · /legal and /privacy at the same viewport and scale";
     rows = [[tile(legal, 900), tile(privacy, 900)]];
+  } else if (SET === "logo") {
+    const header = async (width) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(BASE_URL + "/", { waitUntil: "load" });
+      await page.evaluate(() => document.fonts.ready);
+      return { label: `Header EN · ${width}`, data: (await page.locator("body > header").screenshot()).toString("base64") };
+    };
+    const h320 = await header(320);
+    const h390 = await header(390);
+    const h1440 = await header(1440);
+    const hero390 = await grab("Hero EN · 390", "/", 390, 844);
+    const hero1440 = await grab("Hero EN · 1440", "/", 1440, 900);
+    const og = { label: "OG image · 1200 x 630 (EN and FR)", data: readFileSync("public/og/en.png").toString("base64") };
+    title = "Polo Brokers · commit 09b · Zac's logo";
+    rows = [[tile(h320, 320), tile(h390, 390), tile(h1440, 1100)], [tile(hero390, 390), tile(hero1440, 900), tile(og, 560)]];
   } else {
     throw new Error(`unknown SHEET_SET ${SET}`);
   }

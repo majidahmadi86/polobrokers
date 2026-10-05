@@ -20,7 +20,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
 
   return (
     <header className="relative z-20 border-b border-rule bg-warm/[.96]">
-      <div className="flex items-center justify-between gap-4 px-[5vw] py-[15px] min-[800px]:py-5">
+      <div className="flex items-center justify-between gap-4 px-[5vw] py-[10px] min-[800px]:py-3">
         <Brand locale={locale} dict={dict} />
 
         <div className="hidden items-center gap-6 nav:flex">
