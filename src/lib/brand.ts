@@ -4,9 +4,9 @@ export const LOGO_SIZE = { width: 1202, height: 1216 };
 
 export const LOGO_HEIGHTS = {
   /** Header and drawer, below 800px. */
-  headerMobile: 64,
+  headerMobile: 52,
   /** Header from 800px. */
-  headerDesktop: 80,
+  headerDesktop: 64,
   /** Hero card, below 800px. */
   heroMobile: 240,
   /** Hero card from 800px. */

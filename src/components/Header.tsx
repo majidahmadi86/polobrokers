@@ -19,8 +19,8 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const close = useCallback(() => setOpen(false), []);
 
   return (
-    <header className="relative z-20 border-b border-rule bg-warm/[.96]">
-      <div className="flex items-center justify-between gap-4 px-[5vw] py-[10px] min-[800px]:py-3">
+    <header className="sticky top-0 z-40 border-b border-rule bg-warm/[.96]">
+      <div className="flex items-center justify-between gap-4 px-[5vw] py-2 min-[800px]:py-2">
         <Brand locale={locale} dict={dict} />
 
         <div className="hidden items-center gap-6 nav:flex">
