@@ -53,7 +53,7 @@ export const fr: Dictionary = {
   },
   home: {
     hero: {
-      imageAlt: "Femme portant une chemise vintage Polo en denim lumineux",
+      imageAlt: "Clients parcourant des vêtements Ralph Lauren vintage dans une boutique, sous une enseigne Polo Brokers",
       tagline: ["Spécialistes Ralph Lauren", "Original • Seconde main • Vintage"],
     },
     about: {
@@ -67,9 +67,9 @@ export const fr: Dictionary = {
       men: "Hommes",
       women: "Femmes",
       children: "Enfants",
-      menAlt: "Vêtements Ralph Lauren vintage pour homme",
-      womenAlt: "Vêtements Ralph Lauren vintage pour femme",
-      childrenAlt: "Vêtements Ralph Lauren vintage pour enfant",
+      menAlt: "Homme en chemise oxford Ralph Lauren bleu clair et chino, assis dans un fauteuil en cuir",
+      womenAlt: "Femme en chemise blanche Ralph Lauren et jean, un pull vert sur les épaules",
+      childrenAlt: "Trois enfants en maille et chemises Ralph Lauren sur un canapé avec un chiot golden retriever",
     },
     sell: {
       imageAlt: "Marchand vintage sélectionnant des vêtements Ralph Lauren",

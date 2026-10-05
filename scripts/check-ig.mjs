@@ -71,7 +71,7 @@ check("state wrong secret", !verifyState(state, "other-secret", now));
 check("state garbage", !verifyState("abc", secret, now) && !verifyState(null, secret, now));
 
 // Engine with a fake Instagram.
-const JPEG = readFileSync("public/images/temp-hero.jpg");
+const JPEG = readFileSync("public/images/shop.jpg");
 function fakeApi({ mediaStatus = 200, refreshStatus = 200, calls }) {
   return async (url) => {
     const u = new URL(url);

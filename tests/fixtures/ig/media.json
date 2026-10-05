@@ -5,7 +5,7 @@
       "id": "mock1",
       "media_type": "IMAGE",
       "caption": "Mock post one, a plain caption.",
-      "media_url": "file:public/images/temp-hero.jpg",
+      "media_url": "file:public/images/shop.jpg",
       "permalink": "https://www.instagram.com/polobrokers/",
       "timestamp": "2026-10-06T00:00:00.000Z"
     },
@@ -14,7 +14,7 @@
       "media_type": "VIDEO",
       "caption": "Mock post two \u2728 with emoji \u2014 and an em dash \ud83d\udc4c\ud83c\udffd \u2764\ufe0f #mock",
       "media_url": "file:public/images/does-not-exist.mp4",
-      "thumbnail_url": "file:public/images/temp-men.jpg",
+      "thumbnail_url": "file:public/images/men.jpg",
       "permalink": "https://www.instagram.com/polobrokers/",
       "timestamp": "2026-10-05T00:00:00.000Z"
     },
@@ -22,7 +22,7 @@
       "id": "mock3",
       "media_type": "CAROUSEL_ALBUM",
       "caption": "Mock post three has a long caption that keeps going well past the limit of one hundred and twenty characters, so the alt text must be cut on a word boundary.",
-      "media_url": "file:public/images/temp-women.jpg",
+      "media_url": "file:public/images/women.jpg",
       "permalink": "https://www.instagram.com/polobrokers/",
       "timestamp": "2026-10-04T00:00:00.000Z"
     },
@@ -30,7 +30,7 @@
       "id": "mock4",
       "media_type": "IMAGE",
       "caption": "",
-      "media_url": "file:public/images/temp-children.jpg",
+      "media_url": "file:public/images/children.jpg",
       "permalink": "https://www.instagram.com/polobrokers/",
       "timestamp": "2026-10-03T00:00:00.000Z"
     },
@@ -46,7 +46,7 @@
       "id": "mock6",
       "media_type": "CAROUSEL_ALBUM",
       "caption": "   Mock   post six,   spaced   out.   ",
-      "media_url": "file:public/images/temp-men.jpg",
+      "media_url": "file:public/images/men.jpg",
       "permalink": "https://www.instagram.com/polobrokers/",
       "timestamp": "2026-10-01T00:00:00.000Z"
     }

@@ -51,7 +51,7 @@ export const en: Dictionary = {
   },
   home: {
     hero: {
-      imageAlt: "Woman wearing a luminous vintage Polo denim shirt",
+      imageAlt: "Shoppers browsing vintage Ralph Lauren clothing in a shop under a Polo Brokers sign",
       tagline: ["Ralph Lauren specialists", "Original • Second-hand • Vintage"],
     },
     about: {
@@ -65,9 +65,9 @@ export const en: Dictionary = {
       men: "Men",
       women: "Women",
       children: "Children",
-      menAlt: "Vintage Ralph Lauren menswear",
-      womenAlt: "Vintage Ralph Lauren womenswear",
-      childrenAlt: "Vintage Ralph Lauren childrenswear",
+      menAlt: "Man in a light blue Ralph Lauren oxford shirt and chinos, seated in a leather armchair",
+      womenAlt: "Woman in a white Ralph Lauren shirt and jeans, a green sweater over her shoulders",
+      childrenAlt: "Three children in Ralph Lauren knitwear and shirts on a sofa with a golden retriever puppy",
     },
     sell: {
       imageAlt: "Vintage dealer selecting Ralph Lauren garments",

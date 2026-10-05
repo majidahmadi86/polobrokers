@@ -12,13 +12,14 @@ export function Hero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   return (
     <section className="relative flex min-h-[690px] items-end px-[5vw] pb-[35px] pt-[35px] min-[800px]:min-h-[740px] min-[800px]:items-center min-[800px]:px-[7vw] min-[800px]:py-[60px]">
       <Image
-        // TEMP: replace with Zac original before launch.
-        src="/images/temp-hero.jpg"
+        // Zac's photo (portrait): the shop sign sits top right, clear of the card on desktop and above
+        // it on mobile.
+        src="/images/shop.jpg"
         alt={t.imageAlt}
         fill
         priority
         sizes="100vw"
-        className="object-cover object-[66%_center] min-[800px]:object-center"
+        className="object-cover object-[70%_center] min-[800px]:object-[center_8%]"
       />
       <div
         className="relative mx-auto w-full max-w-[470px] border border-panel-border bg-warm/[.96] px-[22px] py-[29px] shadow-[0_20px_50px_#1e1f1626] min-[800px]:mx-0 min-[800px]:px-[38px] min-[800px]:py-[42px]"

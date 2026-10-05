@@ -12,25 +12,25 @@ export function SelectionCards({ dict }: { dict: Dictionary }) {
       key: "men",
       label: t.men,
       alt: t.menAlt,
-      // TEMP: replace with Zac original before launch. (Left crop of the prototype's shared portrait.)
-      src: "/images/temp-men.jpg",
-      position: "object-[center_12%]",
+      // Zac's photo: face right of centre, upper third.
+      src: "/images/men.jpg",
+      position: "object-[68%_22%]",
     },
     {
       key: "women",
       label: t.women,
       alt: t.womenAlt,
-      // TEMP: replace with Zac original before launch. (Right crop of the prototype's shared portrait.)
-      src: "/images/temp-women.jpg",
-      position: "object-[center_15%]",
+      // Zac's photo: face left of centre, upper third.
+      src: "/images/women.jpg",
+      position: "object-[35%_24%]",
     },
     {
       key: "children",
       label: t.children,
       alt: t.childrenAlt,
-      // TEMP: replace with Zac original before launch.
-      src: "/images/temp-children.jpg",
-      position: "object-[center_25%]",
+      // Zac's photo: three children across the frame, faces in the middle band.
+      src: "/images/children.jpg",
+      position: "object-[50%_42%]",
     },
   ];
   return (
