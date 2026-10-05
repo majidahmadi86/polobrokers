@@ -4,6 +4,17 @@ import type { Dictionary, PageKey } from "./types";
 
 export type { Dictionary, PageKey };
 
+/**
+ * The strings the client components of the shell need (header, drawer, language switch). Passed
+ * instead of the whole dictionary, so every page does not carry all copy in its inline payload.
+ */
+export type ShellDict = Pick<Dictionary, "pages" | "buttons" | "menu" | "language" | "a11y">;
+
+export function shellDict(dict: Dictionary): ShellDict {
+  const { pages, buttons, menu, language, a11y } = dict;
+  return { pages, buttons, menu, language, a11y };
+}
+
 export const LOCALES = ["en", "fr"] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "en";

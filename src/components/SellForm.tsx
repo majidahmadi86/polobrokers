@@ -17,8 +17,7 @@ const control =
   "block min-h-[44px] w-full rounded-none border border-line bg-warm px-4 py-[10px] font-body text-base text-ink " +
   "focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-green aria-[invalid=true]:border-error";
 
-export function SellForm({ dict }: { dict: Dictionary }) {
-  const t = dict.sellForm;
+export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
   const [values, setValues] = useState<Record<Field, string>>({ name: "", contact: "", department: "", category: "", description: "" });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -61,7 +60,7 @@ export function SellForm({ dict }: { dict: Dictionary }) {
     }
     setSummary("");
     const url = whatsappUrl(
-      sellMessage(dict, {
+      sellMessage(t, {
         name: values.name,
         contact: values.contact,
         department: t.departments[values.department as (typeof DEPARTMENTS)[number]],

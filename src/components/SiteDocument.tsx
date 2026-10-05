@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MOTION_SCRIPT, RevealObserver } from "@/components/RevealObserver";
 import { fontVariables } from "@/lib/fonts";
-import { getDictionary, type Locale } from "@/lib/i18n";
+import { getDictionary, shellDict, type Locale } from "@/lib/i18n";
 import "@/app/globals.css";
 
 // The html document of one language tree. Each tree has its own root layout, so html lang is right
@@ -26,7 +26,7 @@ export function SiteDocument({ locale, children }: { locale: Locale; children: R
         >
           {dict.a11y.skipToContent}
         </a>
-        <Header locale={locale} dict={dict} />
+        <Header locale={locale} dict={shellDict(dict)} />
         <main id="main" tabIndex={-1} className="flex-1 outline-none">
           {children}
         </main>

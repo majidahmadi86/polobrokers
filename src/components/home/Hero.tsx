@@ -16,8 +16,11 @@ export function Hero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         src="/images/shop.jpg"
         alt={t.imageAlt}
         fill
+        // The largest element on mobile (LCP): preloaded, at a lighter quality (the card covers most of it).
         priority
-        sizes="100vw"
+        quality={45}
+        // Below 800px the card covers most of the photo: a smaller file is enough there.
+        sizes="(max-width: 799px) 75vw, 100vw"
         className="object-cover object-[70%_center] min-[800px]:object-[center_8%]"
       />
       <div

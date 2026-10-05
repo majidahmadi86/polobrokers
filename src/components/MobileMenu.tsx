@@ -6,7 +6,7 @@ import { useEffect, useRef, type RefObject } from "react";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Brand } from "@/components/Brand";
 import { LanguageSwitch } from "@/components/LanguageSwitch";
-import { localePath, type Dictionary, type Locale, type PageKey } from "@/lib/i18n";
+import { localePath, type ShellDict, type Locale, type PageKey } from "@/lib/i18n";
 import { INSTAGRAM_URL, WHATSAPP_URL } from "@/lib/site";
 
 const DRAWER_NAV: PageKey[] = ["home", "about", "collection", "sell", "contact"];
@@ -14,7 +14,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
 
 type MobileMenuProps = {
   locale: Locale;
-  dict: Dictionary;
+  dict: ShellDict;
   open: boolean;
   onClose: () => void;
   returnFocusRef: RefObject<HTMLButtonElement>;

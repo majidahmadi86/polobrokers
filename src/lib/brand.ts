@@ -1,5 +1,5 @@
 // Zac's logo (the sign), prepared by scripts/prepare-logo.mjs into public/brand.
-// Heights are CSS px; each has a 1x and a 2x WebP. Keep in sync with HEIGHTS in that script.
+// Heights are CSS px; each has a 1x, 1.5x and 2x WebP. Keep in sync with HEIGHTS in that script.
 export const LOGO_SIZE = { width: 1202, height: 1216 };
 
 export const LOGO_HEIGHTS = {
@@ -16,7 +16,7 @@ export const LOGO_HEIGHTS = {
 export function logoSource(height: number) {
   return {
     src: `/brand/logo-${height}.webp`,
-    srcSet: `/brand/logo-${height}.webp 1x, /brand/logo-${height * 2}.webp 2x`,
+    srcSet: `/brand/logo-${height}.webp 1x, /brand/logo-${height * 1.5}.webp 1.5x, /brand/logo-${height * 2}.webp 2x`,
     width: Math.round((height * LOGO_SIZE.width) / LOGO_SIZE.height),
     height,
   };

@@ -7,7 +7,7 @@
 //   white, so the edge stays anti-aliased with no white halo on any ground.
 // 3 Trimmed to the sign. Outputs (committed):
 //   public/brand/logo.png              full resolution, transparent
-//   public/brand/logo-<h>.webp         heights used on the site, at 1x and 2x (see src/lib/brand.ts)
+//   public/brand/logo-<h>.webp         heights used on the site, at 1x, 1.5x and 2x (see src/lib/brand.ts)
 import { mkdirSync } from "node:fs";
 import sharp from "sharp";
 
@@ -16,7 +16,7 @@ const OUT = "public/brand";
 const FIELD_MIN = 236;
 const EDGE_BAND = 2;
 const EDGE_REF = 70; // darkest channel of the sign's own rim; below this an edge pixel is fully opaque
-// Display heights in CSS px (must match src/lib/brand.ts); each is written at 1x and 2x.
+// Display heights in CSS px (must match src/lib/brand.ts); each is written at 1x, 1.5x and 2x.
 const HEIGHTS = [52, 64, 240, 300];
 
 const { data, info } = await sharp(SOURCE).removeAlpha().raw().toBuffer({ resolveWithObject: true });
@@ -106,14 +106,14 @@ const trimmed = await sharp(rgba, { raw: { width: w, height: h, channels: 4 } })
 const full = await sharp(trimmed).png({ compressionLevel: 9 }).toFile(`${OUT}/logo.png`);
 console.log(`${OUT}/logo.png  ${full.width}x${full.height}  (source ${w}x${h}, field removed, trimmed)`);
 for (const height of HEIGHTS) {
-  for (const density of [1, 2]) {
+  for (const density of [1, 1.5, 2]) {
     const px = height * density;
     if (px > full.height) {
       console.log(`skip ${height}px @${density}x: source is ${full.height}px tall`);
       continue;
     }
     const out = `${OUT}/logo-${px}.webp`;
-    const res = await sharp(trimmed).resize({ height: px, kernel: "lanczos3" }).webp({ quality: 90, alphaQuality: 100, effort: 6 }).toFile(out);
+    const res = await sharp(trimmed).resize({ height: px, kernel: "lanczos3" }).webp({ quality: 74, alphaQuality: 90, effort: 6, smartSubsample: true }).toFile(out);
     console.log(`${out}  ${res.width}x${res.height}`);
   }
 }

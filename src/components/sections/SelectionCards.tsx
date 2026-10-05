@@ -46,6 +46,7 @@ export function SelectionCards({ dict }: { dict: Dictionary }) {
               alt={card.alt}
               fill
               sizes="(min-width: 768px) 33vw, 100vw"
+              quality={60}
               className={`object-cover ${card.position} transition-transform duration-[350ms] group-hover:scale-[1.02] motion-reduce:transition-none`}
             />
             <span className="absolute inset-x-[18px] bottom-[18px] bg-warm/[.93] px-[18px] py-[14px] font-display text-[2rem] font-medium leading-tight text-green">

@@ -7,12 +7,12 @@ import { Brand } from "@/components/Brand";
 import { ExternalLink } from "@/components/ExternalLink";
 import { LanguageSwitch } from "@/components/LanguageSwitch";
 import { MobileMenu } from "@/components/MobileMenu";
-import { localePath, type Dictionary, type Locale, type PageKey } from "@/lib/i18n";
+import { localePath, type ShellDict, type Locale, type PageKey } from "@/lib/i18n";
 import { INSTAGRAM_URL } from "@/lib/site";
 
 const HEADER_NAV: PageKey[] = ["about", "collection", "sell"];
 
-export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function Header({ locale, dict }: { locale: Locale; dict: ShellDict }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);

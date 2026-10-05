@@ -16,7 +16,7 @@ export function SellPage({ locale }: { locale: Locale }) {
         <ServicesStrip dict={dict} className="mt-8 max-w-[900px]" />
       </PageHeader>
       <section className="px-[7vw] py-[70px] min-[800px]:px-[8vw] min-[800px]:py-[90px]">
-        <SellForm dict={dict} />
+        <SellForm t={dict.sellForm} />
       </section>
     </>
   );

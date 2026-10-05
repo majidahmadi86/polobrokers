@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LOCALES, switchLocalePath, type Dictionary, type Locale } from "@/lib/i18n";
+import { LOCALES, switchLocalePath, type ShellDict, type Locale } from "@/lib/i18n";
 
 // EN / FR in the small caps label system. Keeps the current path: /about <-> /fr/about.
-export function LanguageSwitch({ locale, dict, className = "" }: { locale: Locale; dict: Dictionary; className?: string }) {
+export function LanguageSwitch({ locale, dict, className = "" }: { locale: Locale; dict: ShellDict; className?: string }) {
   const pathname = usePathname() || "/";
   return (
     <ul aria-label={dict.language.label} className={`label flex items-center ${className}`}>

@@ -12,8 +12,8 @@ export type SellValues = {
 };
 
 /** The WhatsApp message, one line per field, in the page's language. */
-export function sellMessage(dict: Dictionary, v: SellValues): string {
-  const m = dict.sellForm.message;
+export function sellMessage(form: Dictionary["sellForm"], v: SellValues): string {
+  const m = form.message;
   return [
     m.intro,
     `${m.name} ${v.name.trim()}`,
