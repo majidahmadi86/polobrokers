@@ -49,7 +49,7 @@ function ico(pngs) {
 }
 
 async function icons() {
-  const font = readFileSync(join(root, "src/fonts/playfair-display-latin-ext-500.ttf")).toString("base64");
+  const font = readFileSync(join(root, "src/fonts/playfair-display-latin-500.ttf")).toString("base64");
   const page = (w, h, body, radius = 0) => `<!doctype html><html><head><style>
 @font-face { font-family: PD; src: url(data:font/ttf;base64,${font}) format("truetype"); font-weight: 500; }
 html, body { margin: 0; width: ${w}px; height: ${h}px; overflow: hidden; ${radius ? `border-radius:${radius}px;` : ""} }

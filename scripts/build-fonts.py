@@ -3,8 +3,8 @@
 #   curl -L -o PlayfairDisplay.ttf "https://github.com/google/fonts/raw/main/ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf"
 #   curl -L -o LibreFranklin.ttf "https://github.com/google/fonts/raw/main/ofl/librefranklin/LibreFranklin%5Bwght%5D.ttf"
 #   python scripts/build-fonts.py <folder holding both TTFs>
-# Each weight the prototype uses is cut as a static instance, subset to the Google latin + latin-ext
-# ranges (one file per weight, so French accents and the oe ligature never fall back), all OpenType
+# Each weight the site uses is cut as a static instance, subset to the Google latin range
+# (one file per weight; it covers every French accent and the oe ligature), all OpenType
 # layout features kept (small caps, kerning). Playfair 500 is also kept as .ttf for the OG and icon
 # images, because the image renderer cannot read woff2.
 import os
@@ -16,12 +16,10 @@ from fontTools.varLib import instancer
 
 RANGES = (
     "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,"
-    "U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD,"
-    "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,"
-    "U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF"
+    "U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
 )
 JOBS = [
-    ("PlayfairDisplay.ttf", "playfair-display", [500, 600]),
+    ("PlayfairDisplay.ttf", "playfair-display", [500]),
     ("LibreFranklin.ttf", "libre-franklin", [400, 600]),
 ]
 TTF_KEEP = {("playfair-display", 500)}
@@ -45,7 +43,8 @@ for src, name, weights in JOBS:
             subsetter = subset.Subsetter(opts)
             subsetter.populate(unicodes=subset.parse_unicodes(RANGES))
             subsetter.subset(loaded)
-            out = os.path.join(out_dir, f"{name}-latin-ext-{weight}.{ext}")
+            out = os.path.join(out_dir, f"{name}-latin-{weight}.{ext}")
             subset.save_font(loaded, out, opts)
+            loaded.close()  # Windows keeps the temp file locked otherwise
             print(out, os.path.getsize(out))
         os.remove(tmp)
