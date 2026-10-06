@@ -19,12 +19,12 @@ export function AboutPage({ locale }: { locale: Locale }) {
 
       <div className="relative h-[360px] min-[800px]:h-[520px]">
         <Image
-          // TEMP: replace with Zac original before launch. (Same file as Home Sell, cropped higher, from the faces down.)
-          src="/images/temp-sell.jpg"
+          // Zac's shop photo (same file as Home Sell): the sign and the shoppers.
+          src="/images/sell.jpg"
           alt={dict.home.sell.imageAlt}
           fill
           sizes="100vw"
-          className="object-cover object-[center_8%]"
+          className="object-cover object-[center_12%]"
         />
       </div>
 

@@ -70,7 +70,7 @@ export const en: Dictionary = {
       childrenAlt: "Three children in Ralph Lauren knitwear and shirts on a sofa with a golden retriever puppy",
     },
     sell: {
-      imageAlt: "Vintage dealer selecting Ralph Lauren garments",
+      imageAlt: "Shoppers browsing vintage Ralph Lauren clothing in a shop under a Polo Brokers sign",
       kicker: "Buy • Sell • Trade",
       title: "Sell your vintage items to us.",
       body: "We consider individual garments, complete wardrobes and wholesale collections. Send photographs, sizes and condition details directly through WhatsApp.",

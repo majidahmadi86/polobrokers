@@ -19,7 +19,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: ShellDict }) {
   const close = useCallback(() => setOpen(false), []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-warm/[.96]">
+    <header className="relative z-20 border-b border-rule bg-warm/[.96]">
       <div className="flex items-center justify-between gap-4 px-[5vw] py-2 min-[800px]:py-2">
         <Brand locale={locale} dict={dict} />
 

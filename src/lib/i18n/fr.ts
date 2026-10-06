@@ -72,7 +72,7 @@ export const fr: Dictionary = {
       childrenAlt: "Trois enfants en maille et chemises Ralph Lauren sur un canapé avec un chiot golden retriever",
     },
     sell: {
-      imageAlt: "Marchand vintage sélectionnant des vêtements Ralph Lauren",
+      imageAlt: "Clients parcourant des vêtements Ralph Lauren vintage dans une boutique, sous une enseigne Polo Brokers",
       kicker: "Achat • Vente • Échange",
       title: "Vendez-nous vos pièces vintage.",
       body: "Nous étudions les pièces à l'unité, les garde-robes complètes et les lots de gros. Envoyez photos, tailles et état directement sur WhatsApp.",

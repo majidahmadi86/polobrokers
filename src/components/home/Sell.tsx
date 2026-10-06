@@ -11,12 +11,12 @@ export function Sell({ dict }: { dict: Dictionary }) {
     <section className="grid grid-cols-1 min-[800px]:grid-cols-2">
       <div className="relative min-h-[410px] min-[800px]:min-h-[600px]">
         <Image
-          // TEMP: replace with Zac original before launch.
-          src="/images/temp-sell.jpg"
+          // Zac's shop photo (same file as the hero): the sign and the shoppers.
+          src="/images/sell.jpg"
           alt={t.imageAlt}
           fill
           sizes="(min-width: 800px) 50vw, 100vw"
-          className="object-cover"
+          className="object-cover object-[center_20%]"
         />
       </div>
       <div className="flex flex-col justify-center px-[7vw] py-[65px] min-[800px]:px-[8vw] min-[800px]:py-[80px]">
