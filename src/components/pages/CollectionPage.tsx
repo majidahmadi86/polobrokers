@@ -15,7 +15,7 @@ export function CollectionPage({ locale }: { locale: Locale }) {
         </p>
       </PageHeader>
       <section className="bg-green px-[5vw] py-[70px] min-[800px]:py-[85px]">
-        <SelectionCards dict={dict} />
+        <SelectionCards dict={dict} priorityFirst />
       </section>
       <Follow dict={dict} />
     </>

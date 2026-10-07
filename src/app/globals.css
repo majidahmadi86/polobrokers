@@ -56,6 +56,10 @@
   .btn {
     @apply inline-flex min-h-[44px] items-center justify-center border border-green px-4 py-[13px] text-center font-body text-btn font-semibold uppercase leading-none tracking-btn no-underline;
   }
+  /* Large call to action: 56px tall on mobile, 60px from 800px. */
+  .btn-lg {
+    @apply min-h-[56px] px-6 text-[.8rem] tracking-[.14em] min-[800px]:min-h-[60px];
+  }
   .btn-primary {
     @apply bg-green text-white;
   }

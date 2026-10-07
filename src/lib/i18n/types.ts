@@ -6,7 +6,8 @@ export type Dictionary = {
   pages: Record<PageKey, string>;
   buttons: {
     discoverInstagram: string;
-    sellToUs: string;
+    /** Two-line secondary call to action to /sell: small line, big line. */
+    sellPrompt: { small: string; big: string };
     instagram: string;
     whatsapp: string;
   };

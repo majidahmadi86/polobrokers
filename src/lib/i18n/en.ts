@@ -13,7 +13,7 @@ export const en: Dictionary = {
   },
   buttons: {
     discoverInstagram: "Discover on Instagram",
-    sellToUs: "Sell to us",
+    sellPrompt: { small: "Polo items to sell?", big: "Contact us now" },
     instagram: "Instagram",
     whatsapp: "WhatsApp",
   },
@@ -79,7 +79,7 @@ export const en: Dictionary = {
         { title: "Trade", note: "Selected exchanges" },
         { title: "Wholesale", note: "Professional lots" },
       ],
-      button: "Send photos on WhatsApp",
+      button: "Write us",
     },
     follow: {
       kicker: "New pieces • Details • Stories",

@@ -13,7 +13,7 @@ export const fr: Dictionary = {
   },
   buttons: {
     discoverInstagram: "Découvrir sur Instagram",
-    sellToUs: "Vendez-nous vos pièces",
+    sellPrompt: { small: "Des pièces Polo à vendre ?", big: "Contactez-nous" },
     instagram: "Instagram",
     whatsapp: "WhatsApp",
   },
@@ -81,7 +81,7 @@ export const fr: Dictionary = {
         { title: "Échange", note: "Échanges sélectionnés" },
         { title: "Vente en gros", note: "Lots professionnels" },
       ],
-      button: "Envoyer des photos sur WhatsApp",
+      button: "Écrivez-nous",
     },
     follow: {
       kicker: "Nouvelles pièces • Détails • Histoires",

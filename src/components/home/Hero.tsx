@@ -24,18 +24,18 @@ export function Hero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         className="object-cover object-[70%_center] min-[800px]:object-[center_8%]"
       />
       <div
-        className="relative mx-auto w-full max-w-[470px] px-[22px] py-[29px] min-[800px]:mx-0 min-[800px]:px-[38px] min-[800px]:py-[42px]"
+        className="relative mx-auto w-full max-w-[470px] px-[22px] py-[29px] min-[800px]:mx-0 min-[800px]:max-w-[640px] min-[800px]:px-[38px] min-[800px]:py-[42px]"
       >
         {/* No card: Zac's sign sits directly on the photo, where the card was. It already reads "Ralph Lauren specialists /
             Original, second-hand, vintage", so the text tagline stays for screen readers and search only. */}
-        <Logo variant="hero" priority className="mx-auto" />
+        <Logo variant="hero" priority className="mx-auto w-fit" />
         <p className="sr-only">
           {t.tagline[0]}
           <br />
           {t.tagline[1]}
         </p>
         <div className="mt-7">
-          <PrimaryActions locale={locale} dict={dict} onPhoto />
+          <PrimaryActions locale={locale} dict={dict} />
         </div>
       </div>
     </section>
