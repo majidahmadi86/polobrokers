@@ -28,7 +28,7 @@ export function Hero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
       >
         {/* No card: Zac's sign sits directly on the photo, where the card was. It already reads "Ralph Lauren specialists /
             Original, second-hand, vintage", so the text tagline stays for screen readers and search only. */}
-        <Logo variant="hero" priority className="mx-auto w-fit" />
+        <Logo variant="hero" className="mx-auto w-fit" />
         <p className="sr-only">
           {t.tagline[0]}
           <br />

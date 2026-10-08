@@ -7,7 +7,7 @@
 // Each pass: a clean next build (.next removed, so no cache carries over between passes), copy check
 // (sources + built HTML), next start on VERIFY_PORT (default 3112), then the link crawl, the privacy
 // gate, the responsive gate and the Instagram site test (routes, stand-in Instagram callback, media
-// whitelist, rendering); the sell form test runs in the fallback pass. Each pass has its own fresh
+// whitelist, rendering); the sell form test and the WhatsApp entry points (iPhone WebKit, Pixel Chromium) run in the fallback pass. Each pass has its own fresh
 // data folder. Stops at the first failing gate and prints a summary.
 import { spawn, spawnSync } from "node:child_process";
 import { rmSync } from "node:fs";
@@ -94,7 +94,7 @@ for (const pass of PASSES) {
       const gates = [
         ["check:indexing", "scripts/check-indexing.mjs"],
         ["check:links", "scripts/check-links.mjs"],
-        ...(pass.forms ? [["check:forms", "scripts/check-forms.mjs"]] : []),
+        ...(pass.forms ? [["check:forms", "scripts/check-forms.mjs"], ["check:whatsapp", "scripts/check-whatsapp.mjs"]] : []),
         ["check:privacy", "scripts/check-privacy.mjs"],
         ["check:responsive", "scripts/check-responsive.mjs"],
         // Last: its callback test briefly connects a stand-in account (removed again afterwards).

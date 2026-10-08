@@ -17,7 +17,7 @@ const FIELD_MIN = 236;
 const EDGE_BAND = 2;
 const EDGE_REF = 70; // darkest channel of the sign's own rim; below this an edge pixel is fully opaque
 // Display heights in CSS px (must match src/lib/brand.ts); each is written at 1x, 1.5x and 2x.
-const HEIGHTS = [52, 64, 156, 196];
+const HEIGHTS = [52, 64, 192, 240];
 
 const { data, info } = await sharp(SOURCE).removeAlpha().raw().toBuffer({ resolveWithObject: true });
 const { width: w, height: h } = info;

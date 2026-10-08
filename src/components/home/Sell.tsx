@@ -29,7 +29,7 @@ export function Sell({ dict }: { dict: Dictionary }) {
         <p data-reveal>{t.body}</p>
         <ServicesStrip dict={dict} className="my-7" />
         <p data-reveal>
-          <ExternalLink href={WHATSAPP_URL} className="btn btn-gold btn-lg">
+          <ExternalLink href={WHATSAPP_URL} className="btn btn-gold btn-lg w-full min-[800px]:w-auto min-[800px]:min-w-[275px]">
             {t.button}
           </ExternalLink>
         </p>

@@ -1,12 +1,15 @@
 "use client";
 
-import { useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { Dictionary } from "@/lib/i18n";
 import { sellMessage, whatsappUrl } from "@/lib/sell-message";
 
 // "Sell to us" form. Client-side only: nothing is sent, fetched or stored. On a valid submit the
-// message is built in the page language and WhatsApp opens in a new tab with it prefilled; the
-// seller adds photos in the chat. If the browser blocks the new tab, a visible link takes over.
+// message is built in the page language and the page goes straight to WhatsApp (same tab: iPhone
+// Safari blocks a new tab opened from script), with the message prefilled; the seller adds photos
+// in the chat. The "Open WhatsApp" link appears as soon as the form is valid, so there is always
+// something to tap. The submit button stays inactive until the page script is ready: before that, a
+// tap would make the browser submit the form itself and put the details in the address bar.
 
 type Field = "name" | "contact" | "department" | "category" | "description";
 const ORDER: Field[] = ["name", "contact", "department", "category", "description"];
@@ -18,12 +21,22 @@ const control =
   "focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-green aria-[invalid=true]:border-error";
 
 export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
-  const [values, setValues] = useState<Record<Field, string>>({ name: "", contact: "", department: "", category: "", description: "" });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [submitted, setSubmitted] = useState(false);
   const [summary, setSummary] = useState("");
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   const refs = useRef<Partial<Record<Field, HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null>>>({});
+  // Uncontrolled fields, read from the page when needed: anything typed before the script took over
+  // (on a slow phone) is kept, never reset.
+  const read = (): Record<Field, string> => ({
+    name: refs.current.name?.value ?? "",
+    contact: refs.current.contact?.value ?? "",
+    department: refs.current.department?.value ?? "",
+    category: refs.current.category?.value ?? "",
+    description: refs.current.description?.value ?? "",
+  });
 
   const validate = (v: Record<Field, string>) => {
     const found: Partial<Record<Field, string>> = {};
@@ -37,16 +50,15 @@ export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
     return found;
   };
 
-  const update = (field: Field, value: string) => {
-    const next = { ...values, [field]: value };
-    setValues(next);
-    // After a first attempt, errors follow the input so a fixed field clears at once.
-    if (submitted) setErrors(validate(next));
+  // After a first attempt, errors follow the input so a fixed field clears at once.
+  const update = () => {
+    if (submitted) setErrors(validate(read()));
   };
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitted(true);
+    const values = read();
     const found = validate(values);
     setErrors(found);
     const first = ORDER.find((field) => found[field]);
@@ -68,23 +80,14 @@ export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
         description: values.description,
       }),
     );
-    // Opened from the click handler. A blank tab first, so its opener can be cut before it
-    // navigates (window.open with "noopener" returns null and would hide a blocked popup).
-    const tab = window.open("", "_blank");
-    if (!tab) {
-      setFallbackUrl(url);
-      return;
-    }
-    tab.opener = null;
-    tab.location.href = url;
-    setFallbackUrl(null);
+    setFallbackUrl(url);
+    window.location.assign(url);
   };
 
   const fieldProps = (field: Field) => ({
     id: `sell-${field}`,
     name: field,
     required: true,
-    value: values[field],
     "aria-invalid": errors[field] ? true : undefined,
     "aria-describedby": errors[field] ? `sell-${field}-error` : undefined,
   });
@@ -110,7 +113,7 @@ export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
         ref={(el) => {
           refs.current[field] = el;
         }}
-        onChange={(e) => update(field, e.target.value)}
+        onChange={update}
         className={`${control} cursor-pointer appearance-none pr-11`}
       >
         <option value="">{t.choose}</option>
@@ -139,7 +142,7 @@ export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
             }}
             type="text"
             autoComplete="name"
-            onChange={(e) => update("name", e.target.value)}
+            onChange={update}
             className={control}
           />,
         )}
@@ -153,7 +156,7 @@ export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
             }}
             type="text"
             autoComplete="on"
-            onChange={(e) => update("contact", e.target.value)}
+            onChange={update}
             className={control}
           />,
         )}
@@ -183,7 +186,7 @@ export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
             }}
             rows={5}
             minLength={MIN_DESCRIPTION}
-            onChange={(e) => update("description", e.target.value)}
+            onChange={update}
             className={`${control} resize-y`}
           />,
           true,
@@ -195,12 +198,12 @@ export function SellForm({ t }: { t: Dictionary["sellForm"] }) {
       </p>
 
       <div className="mt-6 flex flex-col items-start gap-4">
-        <button type="submit" className="btn btn-gold">
+        <button type="submit" disabled={!ready} className="btn btn-gold btn-lg w-full disabled:cursor-wait min-[800px]:w-auto min-[800px]:min-w-[275px]">
           {t.submit}
         </button>
         <p className="max-w-[620px] text-[.95rem]">{t.note}</p>
         {fallbackUrl && (
-          <a href={fallbackUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+          <a href={fallbackUrl} className="btn btn-lg btn-primary w-full min-[800px]:w-auto min-[800px]:min-w-[275px]">
             {t.fallback}
           </a>
         )}

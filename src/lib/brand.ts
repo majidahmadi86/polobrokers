@@ -8,9 +8,9 @@ export const LOGO_HEIGHTS = {
   /** Header from 800px. */
   headerDesktop: 64,
   /** Hero card, below 800px. */
-  heroMobile: 156,
+  heroMobile: 192,
   /** Hero card from 800px. */
-  heroDesktop: 196,
+  heroDesktop: 240,
 } as const;
 
 export function logoSource(height: number) {

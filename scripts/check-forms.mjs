@@ -4,9 +4,9 @@
 //   options   Department offers Mixed / Mixte, Category offers Wholesale lot / Lot de gros
 //   empty     submitting empty marks all 5 fields aria-invalid, shows each error (linked by
 //             aria-describedby), announces the summary in the live region, focuses the first field
-//   valid     a valid submit opens a new tab on wa.me/<number> whose decoded text matches the
-//             template exactly (wa.me itself is stubbed, nothing leaves the machine)
-//   blocked   with popups blocked, the visible "Open WhatsApp" fallback carries the same URL
+//   valid     a valid submit takes the page itself (same tab) to wa.me/<number>, and the decoded
+//             text matches the template exactly (wa.me itself is stubbed, nothing leaves the machine)
+//   fallback  with WhatsApp unreachable, the visible "Open WhatsApp" link carries the same URL
 // The expected messages are written out here from the brief, independently of the site code.
 import { chromium } from "playwright";
 import { BASE_URL } from "./lib/site.mjs";
@@ -58,6 +58,7 @@ try {
   await context.route("https://wa.me/**", (route) => route.fulfill({ status: 200, contentType: "text/html", body: "<title>wa.me stub</title>" }));
 
   const fill = async (page, input) => {
+    await page.locator('form button[type="submit"]:not([disabled])').waitFor({ timeout: 20000 });
     await page.fill("#sell-name", input.name);
     await page.fill("#sell-contact", input.contact);
     await page.selectOption("#sell-department", { label: input.department });
@@ -99,41 +100,34 @@ try {
     if (empty.focused !== "sell-name") fail("empty", `focus on #${empty.focused}, expected #sell-name`);
     if (empty.live !== c.summary) fail("empty", `live region says "${empty.live}"`);
 
-    // valid
+    // valid: the page itself goes to wa.me (same tab, as iPhone Safari needs).
     await fill(page, c.input);
-    const [popup] = await Promise.all([page.waitForEvent("popup"), page.click('form button[type="submit"]')]);
-    await popup.waitForURL((url) => url.hostname === "wa.me", { timeout: 5000 }).catch(() => {});
-    const url = new URL(popup.url());
-    const raw = popup.url().split("?text=")[1] || "";
-    const text = decodeURIComponent(raw);
-    if (url.hostname !== "wa.me" || url.pathname !== `/${NUMBER}`) fail("valid", `opened ${popup.url().slice(0, 60)}`);
+    await Promise.all([page.waitForURL((u) => u.hostname === "wa.me", { timeout: 8000 }).catch(() => {}), page.click('form button[type="submit"]')]);
+    const url = new URL(page.url());
+    const text = decodeURIComponent(page.url().split("?text=")[1] || "");
+    if (url.hostname !== "wa.me" || url.pathname !== `/${NUMBER}`) fail("valid", `went to ${page.url().slice(0, 60)}`);
     if (text !== c.expected) fail("valid", `decoded text differs:${NL}${text}${NL}expected:${NL}${c.expected}`);
-    if (await page.locator('form [aria-invalid="true"]').count()) fail("valid", "errors still shown after a valid submit");
-    if (!(await popup.evaluate(() => window.opener === null))) fail("valid", "WhatsApp tab keeps a reference to the opener");
     samples.push(`${c.path}${NL}${text}`);
-    await popup.close();
 
-    // blocked
-    const blocked = await context.newPage();
-    await blocked.addInitScript(() => {
-      window.open = () => null;
-    });
+    // fallback: if WhatsApp cannot be reached, the visible link is there with the same URL.
+    const offline = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 1280, height: 900 } });
+    // 204: the navigation goes nowhere and the page stays, as when WhatsApp cannot be opened.
+    await offline.route("https://wa.me/**", (route) => route.fulfill({ status: 204 }));
+    const blocked = await offline.newPage();
     await blocked.goto(BASE_URL + c.path, { waitUntil: "networkidle" });
     await fill(blocked, c.input);
     await blocked.click('form button[type="submit"]');
     const link = blocked.getByRole("link", { name: c.fallback });
     try {
       await link.waitFor({ state: "visible", timeout: 3000 });
-      // Compared decoded: the browser may re-encode characters such as the apostrophe in the tab URL.
       const href = (await link.getAttribute("href")) || "";
       if (!href.startsWith(`https://wa.me/${NUMBER}?text=`) || decodeURIComponent(href.split("?text=")[1] || "") !== text) {
-        fail("blocked", "fallback link URL differs from the WhatsApp URL");
+        fail("fallback", "fallback link URL differs from the WhatsApp URL");
       }
-      if ((await link.getAttribute("target")) !== "_blank") fail("blocked", "fallback link does not open a new tab");
     } catch {
-      fail("blocked", `no visible "${c.fallback}" link when the popup is blocked`);
+      fail("fallback", `no visible "${c.fallback}" link after a valid submit`);
     }
-    await blocked.close();
+    await offline.close();
     if (errors.length) fail("errors", errors.join(" | "));
     await page.close();
   }
@@ -146,4 +140,4 @@ if (failures.length) {
   console.error(`${NL}check:forms FAILED (${failures.length})${NL}${failures.join(NL)}`);
   process.exit(1);
 }
-console.log(`${NL}check:forms ok · EN and FR · options, empty submit, valid submit, blocked popup`);
+console.log(`${NL}check:forms ok · EN and FR · options, empty submit, valid submit (same tab), fallback link`);

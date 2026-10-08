@@ -20,7 +20,8 @@
     "check:lighthouse": "node scripts/check-lighthouse.mjs",
     "check:ig": "node scripts/check-ig.mjs",
     "check:ig-site": "node scripts/check-ig-site.mjs",
-    "check:indexing": "node scripts/check-indexing.mjs"
+    "check:indexing": "node scripts/check-indexing.mjs",
+    "check:whatsapp": "node scripts/check-whatsapp.mjs"
   },
   "dependencies": {
     "next": "14.2.35",
