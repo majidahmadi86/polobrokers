@@ -17,9 +17,13 @@ async function loadFeed(): Promise<Feed | null> {
       appSecret: cfg.appSecret,
       graphBase: cfg.graphBase,
       apiVersion: IG_API_VERSION,
-      fetch,
+      // Next caches server fetches too: give them the same period as the feed itself. ("no-store"
+      // here would make a static page dynamic at build time and drop the feed.)
+      fetch: (input, init) => fetch(input, { ...init, next: { revalidate: REVALIDATE } }),
       now: Date.now,
       log: (message) => console.warn(message),
+      beholdUrl: cfg.beholdUrl,
+      expectedUsername: cfg.expectedUsername,
     });
   } catch (err) {
     // buildFeed never throws; this only guards the page against the unexpected.
@@ -30,8 +34,14 @@ async function loadFeed(): Promise<Feed | null> {
 
 // Next keeps this cache in .next/cache across builds: the key carries the mode and the data folder,
 // so a mock feed can never be served in live mode (or another folder's feed).
+// The source and the Behold URL are in the key too, so adding BEHOLD_FEED_URL takes effect on the
+// next build without any manual cache step.
 const cfg = igConfig();
-const CACHE_KEY = [FEED_TAG, cfg.mock ? "mock" : "live", cfg.dataDir];
+const CACHE_KEY = [FEED_TAG, cfg.mock ? "mock" : cfg.beholdUrl ? "behold" : "live", cfg.dataDir, cfg.beholdUrl || ""];
+// Behold budget: the free plan allows 1,200 views a month and every fetch is one view. Refetching
+// every 6 hours is about 4 a day, 120 a month (plus a few per deploy, one per build worker); Behold
+// itself only refreshes the feed once a day. Meta has no such limit: one hour.
+const REVALIDATE = cfg.beholdUrl && !cfg.mock ? 6 * 3600 : 3600;
 
-/** The latest posts, cached one hour. Null means: show no feed (the page keeps its fallback). */
-export const getFeed = unstable_cache(loadFeed, CACHE_KEY, { revalidate: 3600, tags: [FEED_TAG] });
+/** The latest posts, cached (6h Behold, 1h Meta). Null means: show no feed (the page keeps its fallback). */
+export const getFeed = unstable_cache(loadFeed, CACHE_KEY, { revalidate: REVALIDATE, tags: [FEED_TAG] });

@@ -3,6 +3,7 @@
 // First: lint, i18n parity, the Instagram unit tests. Then the site is built and served three times:
 //   fallback  no Instagram token: the site as it is without a feed       (PB_INDEXABLE=1)
 //   mock      IG_MOCK=1: the feed rendered from the fixtures through the real image pipeline (PB_INDEXABLE=1)
+//   behold    BEHOLD_FEED_URL set (a local stand-in for Behold): the feed from the Behold path
 //   preview   PB_INDEXABLE unset, as on the VPS before launch: only the indexing check (Disallow: /, noindex)
 // Each pass: a clean next build (.next removed, so no cache carries over between passes), copy check
 // (sources + built HTML), next start on VERIFY_PORT (default 3112), then the link crawl, the privacy
@@ -31,6 +32,13 @@ const IG_TEST = {
 const PASSES = [
   { mode: "fallback", env: { PB_INDEXABLE: "1", EXPECT_INDEXABLE: "1", IG_MOCK: "", IG_DATA_DIR: ".data/verify-fallback", IG_EXPECT: "none" }, forms: true },
   { mode: "mock", env: { PB_INDEXABLE: "1", EXPECT_INDEXABLE: "1", IG_MOCK: "1", IG_DATA_DIR: ".data/verify-mock", IG_EXPECT: "grid" }, forms: false },
+  // Behold as the source, served by a local stand-in (scripts/lib/behold-standin.mjs) on 3198.
+  {
+    mode: "behold",
+    env: { PB_INDEXABLE: "1", EXPECT_INDEXABLE: "1", IG_MOCK: "", BEHOLD_FEED_URL: "http://127.0.0.1:3198/feed", IG_BEHOLD_ALLOW_LOCAL: "1", IG_DATA_DIR: ".data/verify-behold", IG_EXPECT: "grid" },
+    forms: false,
+    standin: true,
+  },
   { mode: "preview", env: { PB_INDEXABLE: "", EXPECT_INDEXABLE: "0", IG_MOCK: "", IG_DATA_DIR: ".data/verify-preview" }, only: ["check:indexing"] },
 ];
 
@@ -74,6 +82,12 @@ for (const [name, args] of [
 }
 
 for (const pass of PASSES) {
+  const standin = pass.standin ? spawn(process.execPath, ["scripts/lib/behold-standin.mjs", "3198"], { stdio: "ignore", detached: process.platform !== "win32" }) : null;
+  if (standin) {
+    // Stopped on any exit, including summary(1) after a failed build.
+    process.on("exit", () => stop(standin));
+    await new Promise((r) => setTimeout(r, 800));
+  }
   const env = { ...IG_TEST, ...pass.env, BASE_URL };
   rmSync(".next", { recursive: true, force: true });
   rmSync(pass.env.IG_DATA_DIR, { recursive: true, force: true });
@@ -109,6 +123,7 @@ for (const pass of PASSES) {
     }
   } finally {
     stop(server);
+    if (standin) stop(standin);
   }
   if (failed) summary(1);
 }

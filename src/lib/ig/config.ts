@@ -1,5 +1,6 @@
 import "server-only";
 import path from "node:path";
+import { BEHOLD_PREFIX, beholdUrlAllowed } from "./behold";
 
 // Instagram API with Instagram Login, configuration from the environment (see .env.example).
 // Endpoints checked against Meta's docs in October 2026 (Graph API v25.0):
@@ -26,6 +27,8 @@ export type IgConfig = {
   graphBase: string;
   oauthBase: string;
   fixturesDir: string;
+  /** Behold JSON feed, the primary source when set. Null if unset or not a Behold URL. */
+  beholdUrl: string | null;
 };
 
 export function igConfig(): IgConfig {
@@ -42,7 +45,18 @@ export function igConfig(): IgConfig {
     graphBase: env.IG_GRAPH_BASE || "https://graph.instagram.com",
     oauthBase: env.IG_OAUTH_BASE || "https://api.instagram.com",
     fixturesDir: path.resolve("tests/fixtures/ig"),
+    beholdUrl: beholdUrl(env.BEHOLD_FEED_URL, env.IG_BEHOLD_ALLOW_LOCAL === "1"),
   };
+}
+
+let warned = false;
+function beholdUrl(raw: string | undefined, allowLocal: boolean): string | null {
+  const url = raw?.trim();
+  if (!url) return null;
+  if (beholdUrlAllowed(url, allowLocal)) return url;
+  if (!warned) console.warn(`[ig] BEHOLD_FEED_URL ignored: it must start with ${BEHOLD_PREFIX}`);
+  warned = true;
+  return null;
 }
 
 /** The connect and status routes exist only when every value they need is set. */

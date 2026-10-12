@@ -2,6 +2,7 @@ import "server-only";
 import { readdir, readFile, stat, unlink } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
+import { mapBehold, type BeholdFeed } from "./behold";
 import { sanitizeCaption } from "./sanitize";
 import { EXPIRY_WARNING_DAYS, daysUntil, readToken, shouldRefresh, writeAtomic, writeToken } from "./token";
 
@@ -18,7 +19,14 @@ export type FeedPost = {
   alt: string | null;
 };
 export type Feed = { posts: FeedPost[]; updatedAt: string; stale?: boolean };
-export type FeedStatus = { lastFeedOk: string | null; lastError: string | null; lastErrorAt: string | null; warning: string | null };
+export type FeedSource = "behold" | "meta" | "mock" | "none";
+export type FeedStatus = {
+  lastFeedOk: string | null;
+  lastError: string | null;
+  lastErrorAt: string | null;
+  warning: string | null;
+  source?: FeedSource;
+};
 
 export type EngineDeps = {
   dataDir: string;
@@ -30,9 +38,13 @@ export type EngineDeps = {
   fetch: typeof fetch;
   now: () => number;
   log: (message: string) => void;
+  /** Behold JSON feed URL, already checked (see beholdUrlAllowed). Takes precedence over Meta. */
+  beholdUrl?: string | null;
+  /** Only this Instagram account is accepted. */
+  expectedUsername?: string;
 };
 
-type ApiMedia = {
+export type ApiMedia = {
   id: string;
   caption?: string;
   media_type: MediaType;
@@ -95,7 +107,7 @@ export function imageSource(m: ApiMedia): string | null {
 }
 
 async function getJson(d: EngineDeps, url: string): Promise<unknown> {
-  const res = await d.fetch(url, { signal: AbortSignal.timeout(15000), cache: "no-store" });
+  const res = await d.fetch(url, { signal: AbortSignal.timeout(15000) });
   if (!res.ok) {
     // The error body can echo the request; never let the token reach a log line.
     throw new Error(`HTTP ${res.status} from ${new URL(url).pathname}`);
@@ -109,7 +121,7 @@ async function loadImage(d: EngineDeps, source: string): Promise<Buffer> {
     if (!d.mock) throw new Error("local image source outside mock mode");
     return readFile(path.resolve(source.slice(5)));
   }
-  const res = await d.fetch(source, { signal: AbortSignal.timeout(20000), cache: "no-store" });
+  const res = await d.fetch(source, { signal: AbortSignal.timeout(20000) });
   if (!res.ok) throw new Error(`image HTTP ${res.status}`);
   const data = Buffer.from(await res.arrayBuffer());
   if (data.length > MAX_IMAGE_BYTES) throw new Error("image too large");
@@ -120,6 +132,10 @@ async function latestMedia(d: EngineDeps): Promise<ApiMedia[]> {
   if (d.mock) {
     const fixture = JSON.parse(await readFile(path.join(d.fixturesDir, "media.json"), "utf8")) as { data: ApiMedia[] };
     return fixture.data;
+  }
+  if (d.beholdUrl) {
+    // One fetch is one Behold view; the caller caches the result for 6 hours (see feed.ts).
+    return mapBehold((await getJson(d, d.beholdUrl)) as BeholdFeed, d.expectedUsername || "polobrokers");
   }
   let token = await readToken(d.dataDir);
   if (!token) throw new Error("no token (connect Instagram first)");
@@ -158,6 +174,10 @@ async function latestMedia(d: EngineDeps): Promise<ApiMedia[]> {
   return body.data;
 }
 
+export function feedSource(d: Pick<EngineDeps, "mock" | "beholdUrl">): FeedSource {
+  return d.mock ? "mock" : d.beholdUrl ? "behold" : "meta";
+}
+
 export async function buildFeed(d: EngineDeps): Promise<Feed | null> {
   try {
     const media = (await latestMedia(d)).filter((m) => ID.test(m.id) && m.permalink && imageSource(m)).slice(0, FEED_SIZE);
@@ -187,7 +207,7 @@ export async function buildFeed(d: EngineDeps): Promise<Feed | null> {
 
     const feed: Feed = { posts, updatedAt: new Date(d.now()).toISOString() };
     await writeAtomic(feedFile(d.dataDir), JSON.stringify(feed, null, 2));
-    await writeStatus(d.dataDir, { lastFeedOk: feed.updatedAt, lastError: null, lastErrorAt: null });
+    await writeStatus(d.dataDir, { lastFeedOk: feed.updatedAt, lastError: null, lastErrorAt: null, source: feedSource(d) });
     return feed;
   } catch (err) {
     const message = (err as Error).message;

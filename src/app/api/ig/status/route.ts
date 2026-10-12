@@ -20,6 +20,7 @@ export async function GET(request: Request) {
     username: token?.username ?? null,
     tokenAgeDays: token ? daysBetween(token.obtainedAt, now) : null,
     expiresInDays: token ? daysUntil(token.expiresAt, now) : null,
+    source: cfg.mock ? "mock" : cfg.beholdUrl ? "behold" : token ? "meta" : "none",
     lastFeedOk: status.lastFeedOk,
     lastError: status.lastError,
     warning: status.warning,

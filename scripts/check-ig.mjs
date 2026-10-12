@@ -8,6 +8,9 @@
 //               at 2 days; refresh at 8 days rewrites token.json; failed refresh near expiry warns loudly;
 //               API failure without a cache returns null (no throw); API failure with feed.json serves it
 //               (stale); a local file source outside mock mode is refused
+//   behold      fixture mapping, image choice (largest size from 1080px, else mediaUrl; VIDEO thumbnail),
+//               refusal of another account, non-Behold URLs rejected, HTTP error to null (no throw),
+//               stale feed served, Behold preferred over a Meta token
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -26,7 +29,7 @@ const check = (name, ok, detail = "") => {
 // Transpile the modules under test, with relative imports pointing at the .mjs copies.
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
-for (const name of ["sanitize", "state", "token", "engine"]) {
+for (const name of ["sanitize", "state", "token", "behold", "engine"]) {
   const source = readFileSync(`src/lib/ig/${name}.ts`, "utf8").replace(`import "server-only";`, "");
   const { outputText } = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
   writeFileSync(path.join(OUT, `${name}.mjs`), outputText.replace(/from "[.][/]([a-z]+)"/g, 'from "./$1.mjs"'));
@@ -36,6 +39,7 @@ const { sanitizeCaption } = await load("sanitize");
 const { createState, verifyState, STATE_TTL_MS } = await load("state");
 const { shouldRefresh } = await load("token");
 const { buildFeed } = await load("engine");
+const { beholdUrlAllowed, beholdImage, mapBehold } = await load("behold");
 
 // Sanitizer.
 const EMOJI = new RegExp(String.raw`\p{Extended_Pictographic}`, "u");
@@ -178,9 +182,51 @@ const localFetch = async (url) =>
     : new Response("{}", { status: 404 });
 check("engine refuses file: sources outside mock mode", (await buildFeed(deps(local, localFetch))) === null);
 
+// Behold.
+const BEHOLD = JSON.parse(readFileSync("tests/fixtures/behold/feed.json", "utf8"));
+const mapped = mapBehold(BEHOLD, "polobrokers");
+check("behold maps 6 posts", mapped.length === 6 && mapped.every((m) => m.id && m.permalink && m.media_type));
+check("behold image: largest size from 1080px", beholdImage(BEHOLD.posts[0]) === BEHOLD.posts[0].sizes.full.mediaUrl);
+check("behold image: VIDEO uses its thumbnail", beholdImage(BEHOLD.posts[1]) === BEHOLD.posts[1].thumbnailUrl);
+check("behold image: under 1080px falls back to mediaUrl", beholdImage(BEHOLD.posts[3]) === BEHOLD.posts[3].mediaUrl);
+let refused = false;
+try {
+  mapBehold({ ...BEHOLD, username: "someone_else" }, "polobrokers");
+} catch {
+  refused = true;
+}
+check("behold refuses another account", refused);
+check("behold URL accepted", beholdUrlAllowed("https://feeds.behold.so/AbC123"));
+check("behold URL rejected: other host", !beholdUrlAllowed("https://evil.example/feeds.behold.so/x") && !beholdUrlAllowed("http://feeds.behold.so/x") && !beholdUrlAllowed("https://feeds.behold.so/"));
+check("behold URL rejected: local unless allowed", !beholdUrlAllowed("http://127.0.0.1:3198/feed") && beholdUrlAllowed("http://127.0.0.1:3198/feed", true));
+const beholdFetch = (feed, status = 200) => async (url) => {
+  const u = new URL(url);
+  if (u.hostname === "feeds.behold.so") return status === 200 ? new Response(JSON.stringify(feed)) : new Response("{}", { status });
+  return new Response(JSON.stringify({ error: "meta must not be called" }), { status: 418 });
+};
+const imageFetch = (inner) => async (url) => (/(behold[.]pictures|cdninstagram)/.test(url) ? new Response(JPEG) : inner(url));
+const bdir = path.join(OUT, "behold");
+tokenAt(bdir, 2);
+const bfeed = await buildFeed(deps(bdir, imageFetch(beholdFetch(BEHOLD)), { beholdUrl: "https://feeds.behold.so/fixture", expectedUsername: "polobrokers" }));
+check("behold feed built: 6 posts, preferred over the Meta token", bfeed?.posts.length === 6);
+check("behold caption sanitised", bfeed?.posts[1].alt === "Fixture reel with an emoji, and an em dash.", JSON.stringify(bfeed?.posts[1].alt));
+check("behold status source", JSON.parse(readFileSync(path.join(bdir, "status.json"), "utf8")).source === "behold");
+const bother = await buildFeed(deps(path.join(OUT, "behold-other"), imageFetch(beholdFetch({ ...BEHOLD, username: "someone_else" })), { beholdUrl: "https://feeds.behold.so/fixture" }));
+check("behold other account: null, nothing cached", bother === null && !existsSync(path.join(OUT, "behold-other", "feed.json")));
+let bthrew = false;
+let berr;
+try {
+  berr = await buildFeed(deps(path.join(OUT, "behold-down"), imageFetch(beholdFetch(BEHOLD, 503)), { beholdUrl: "https://feeds.behold.so/fixture" }));
+} catch {
+  bthrew = true;
+}
+check("behold HTTP error: null, no throw", !bthrew && berr === null);
+const bstale = await buildFeed(deps(bdir, imageFetch(beholdFetch(BEHOLD, 500)), { beholdUrl: "https://feeds.behold.so/fixture" }));
+check("behold failure serves the last good feed.json", bstale?.stale === true && bstale.posts.length === 6);
+
 rmSync(OUT, { recursive: true, force: true });
 if (failures.length) {
   console.error(`check:ig FAILED (${failures.length} of ${passed + failures.length})${NL}${failures.join(NL)}`);
   process.exit(1);
 }
-console.log(`check:ig ok · ${passed} checks · sanitizer, refresh decision, state HMAC, engine (live, refresh, expiry warning, failure, stale, no token)`);
+console.log(`check:ig ok · ${passed} checks · sanitizer, refresh decision, state HMAC, engine (live, refresh, expiry warning, failure, stale, no token), behold`);
